@@ -26,6 +26,7 @@ export const Recipes = () => {
     return (
       <MainLayout spacing={4}>
         <Skeleton shape='rect' height='1.5rem' width='50%' />
+        <Skeleton shape='rect' height='1.5rem' width='15%' />
         <div className='grid grid-cols-2 gap-5'>
           {Array.from({ length: 4 }).map((_, index) => (
             <GridListSkeleton key={index} />

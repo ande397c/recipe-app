@@ -10,6 +10,19 @@ import { useParams } from 'react-router-dom';
 import { GroceryItem } from '@/components/GroceryItem';
 import { GroceryListOperations } from './GroceryListOperations';
 import { GroceryDetailsModals, GroceryDetailsModalsProps } from './GroceryDetailsModal';
+import { Skeleton } from '@/components/Skeleton';
+import {GroceryItem as GroceryItemInterface} from '@/interfaces/groceryItem';
+
+const sortedItens = (items: GroceryItemInterface[] | undefined) => {
+  if (!items) {
+    return [];
+  }
+  return items.sort((a, b) => {
+    if (a.is_checked && !b.is_checked) return 1;
+    if (!a.is_checked && b.is_checked) return -1;
+    return a.grocery_item.localeCompare(b.grocery_item);
+  });
+};
 
 export const GroceryListDetails = () => {
   const { id } = useParams();
@@ -54,8 +67,12 @@ export const GroceryListDetails = () => {
 
   if (isLoadingListDeatils) {
     return (
-      <MainLayout>
-        <p>Loading...</p>
+      <MainLayout spacing={4}>
+        <Skeleton shape='rect' height='1.5rem' width='50%' />
+        <Skeleton shape='rect' height='1.5rem' width='15%' />
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} shape='rect' width='100%' />
+        ))}
       </MainLayout>
     );
   }
@@ -68,9 +85,11 @@ export const GroceryListDetails = () => {
 
       <GroceryListOperations
         listItems={singleGroceryList?.grocery_items ?? []}
-        onDisplayRenameModal={() => setGroceryDetailsModal({type: 'rename'})}
-        onDisplayMoveContentModal={() => setGroceryDetailsModal({type: 'moveContent', listId: id})}
-        onDisplayDeleteListModal={() => setGroceryDetailsModal({type: 'delete', listId: id})}
+        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename' })}
+        onDisplayMoveContentModal={() =>
+          setGroceryDetailsModal({ type: 'moveContent', listId: id })
+        }
+        onDisplayDeleteListModal={() => setGroceryDetailsModal({ type: 'delete', listId: id })}
       />
       <input
         className='my-4'
@@ -80,7 +99,7 @@ export const GroceryListDetails = () => {
         onChange={(e) => setNewItem(e.target.value)}
         onBlur={handleCreateItem}
       />
-      {singleGroceryList?.grocery_items?.map((item) => (
+      {sortedItens(singleGroceryList?.grocery_items)?.map((item) => (
         <GroceryItem
           key={item.id}
           id={item.id}

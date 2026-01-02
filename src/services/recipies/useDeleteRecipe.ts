@@ -20,8 +20,8 @@ export const useDeleteRecipe = () => {
 
   return useMutation({
     mutationFn: deleteRecipe,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['recipes'] });
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['recipes', variables.id] });
     }
   });
 };

@@ -1,4 +1,8 @@
 import { FC } from 'react';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Button } from '@/components/ui/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faGrip } from '@fortawesome/free-solid-svg-icons';
 
 interface ViewButtonsProps {
   isDenseView: boolean;
@@ -7,13 +11,15 @@ interface ViewButtonsProps {
 
 export const ViewButtons: FC<ViewButtonsProps> = ({ isDenseView, onChangeView }) => {
   return (
-    <div className='flex items-center gap-2'>
-      <button value='list' className={`${isDenseView ? 'font-semibold' : ''}`} onClick={onChangeView}>
-        List
-      </button>
-      <button value='grid' className={`${!isDenseView ? 'font-semibold' : ''}`} onClick={onChangeView}>
-        Grid
-      </button>
-    </div>
+    <ButtonGroup>
+      <Button variant={isDenseView ? 'outline' : 'ghost'} size='icon' value='list' onClick={onChangeView}>
+        <FontAwesomeIcon icon={faBars} />
+      </Button>
+      <Button variant={!isDenseView ? 'outline' : 'ghost'} size='icon' value='grid' onClick={onChangeView}>
+        <FontAwesomeIcon icon={faGrip} />
+      </Button>
+    </ButtonGroup>
   );
 };
+
+

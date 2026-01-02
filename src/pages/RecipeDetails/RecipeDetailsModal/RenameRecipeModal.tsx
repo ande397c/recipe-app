@@ -25,7 +25,7 @@ export const RenameRecipeModal: FC<RenameRecipeModalProps> = ({ onClose }) => {
         />
         <BaseModal.Actions>
           <button type='submit' className='bg-black text-white px-4 py-2 rounded-md transition'>
-            Opret
+            Rediger
           </button>
         </BaseModal.Actions>
       </form>

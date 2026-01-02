@@ -27,28 +27,43 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({
   return (
     <li
       className={clsx(
-        'w-full overflow-hidden cursor-pointer',
+        'w-full overflow-hidden',
         isDense ? 'flex flex-row items-center gap-3' : 'flex flex-col'
       )}
-      onClick={onClick}
     >
       <Link
         to={isCreateVariant ? '#' : redirectUrl}
+        onClick={onClick}
         className={clsx(
-          'relative flex-shrink-0 bg-stone-200 rounded-sm',
-          isDense ? 'w-16 h-16' : 'w-full aspect-[4/3]',
-          !isCreateVariant && 'overflow-hidden',
-          isCreateVariant && 'flex items-center justify-center'
+          'flex w-full cursor-pointer',
+          isDense ? 'flex-row items-center gap-3' : 'flex-col'
         )}
       >
-        {isCreateVariant ? (
-          <FontAwesomeIcon icon={faPlus} size='xl' />
-        ) : (
-          <CardImage img={img} alt={title} isRecipeVariant={isRecipeVariant} />
-        )}
-      </Link>
+        <div
+          className={clsx(
+            'relative flex-shrink-0 bg-stone-200 rounded-sm',
+            isDense ? 'w-16 h-16' : 'w-full aspect-[4/3]',
+            !isCreateVariant && 'overflow-hidden',
+            isCreateVariant && 'flex items-center justify-center'
+          )}
+        >
+          {isCreateVariant ? (
+            <FontAwesomeIcon icon={faPlus} size='xl' className='text-amber-600' />
+          ) : (
+            <CardImage img={img} alt={title} isRecipeVariant={isRecipeVariant} />
+          )}
+        </div>
 
-      <p className={clsx('px-2 text-sm font-medium', !isDense && 'py-2 text-center')}>{title}</p>
+        <p
+          className={clsx(
+            'px-2 text-sm font-medium',
+            !isDense && 'py-2 text-center',
+            isCreateVariant && 'text-amber-600'
+          )}
+        >
+          {title}
+        </p>
+      </Link>
     </li>
   );
 };
