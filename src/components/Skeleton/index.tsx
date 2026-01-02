@@ -37,7 +37,7 @@ export const Skeleton = ({ shape = 'circle', width, height, size, alignCenter }:
   return (
     <div className='animate-pulse'>
       <div className={clsx('bg-gray-300', defaultClasses)} style={style}></div>
-      <span className='sr-only'>Loading...</span>
+      <span className='sr-only'>Loading</span>
     </div>
   );
 };

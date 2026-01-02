@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { MainLayout } from '@/components/MainLayout';
 import { useParams } from 'react-router-dom';
 import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie';
@@ -15,13 +15,13 @@ import clsx from 'clsx';
 import { Skeleton } from '@/components/Skeleton';
 import { GroceryItem } from '@/components/GroceryItem';
 import { IngredientItem } from '@/interfaces/ingredientItem';
-import { useUpdateIngredient } from '@/services/recipies/useUpdateIngredient';
+import { useUpdateIngredient } from '@/services/ingredients/useUpdateIngredient';
 import {
   CreateIngredientInput,
   useCreateIngredient
-} from '@/services/recipies/useCreateIngredient';
-import { CreateRecipeStepInput, useCreateRecipeStep } from '@/services/recipies/useCreateRecipeStep';
-import { useUpdateRecipeStep } from '@/services/recipies/useUpdateRecipeStep';
+} from '@/services/ingredients/useCreateIngredient';
+import { CreateRecipeStepInput, useCreateRecipeStep } from '@/services/recipeSteps/useCreateRecipeStep';
+import { useUpdateRecipeStep } from '@/services/recipeSteps/useUpdateRecipeStep';
 
 const sortedItens = (items: IngredientItem[] | undefined) => {
   if (!items) {
@@ -47,7 +47,8 @@ export const RecipeDetail: FC = () => {
     null
   );
 
-  const handleCreateStep = () => {
+  const handleCreateStep = (e: FormEvent) => {
+    e.preventDefault();
     const instruction = newStep.trim();
     if (!instruction) return;
 
@@ -73,7 +74,8 @@ export const RecipeDetail: FC = () => {
       });
     };
 
-  const handleCreateItem = () => {
+  const handleCreateItem = (e: FormEvent) => {
+    e.preventDefault();
     const name = newItem.trim();
     if (!name) return;
 
@@ -151,14 +153,17 @@ export const RecipeDetail: FC = () => {
         <img src={recipe?.img_url} alt={recipe?.recipe_name} className='max-w-[25rem] rounded-sm' />
       )}
       <h2 className='text-lg'>Fremgangsmåde</h2>
-      <input
-        className='my-4'
-        value={newStep}
-        type='text'
-        placeholder='Tilføj step'
-        onChange={(e) => setNewStep(e.target.value)}
-        onBlur={handleCreateStep}
-      />
+      <form onSubmit={handleCreateStep}>
+        <input
+          className='my-4 w-full'
+          value={newStep}
+          type='text'
+          placeholder='Tilføj step'
+          onChange={(e) => setNewStep(e.target.value)}
+          onBlur={handleCreateStep}
+        />
+        <button className='invisible'>Tilføj</button>
+      </form>
       <ol className='list-decimal pl-4 cursor-pointer'>
         {recipe?.recipe_steps.map((step) => (
           <li
@@ -172,14 +177,17 @@ export const RecipeDetail: FC = () => {
       </ol>
 
       <h2 className='text-lg'>Ingredienser</h2>
-      <input
-        className='my-4'
-        value={newItem}
-        type='text'
-        placeholder='Create item'
-        onChange={(e) => setNewItem(e.target.value)}
-        onBlur={handleCreateItem}
-      />
+      <form onSubmit={handleCreateItem}>
+        <input
+          className='my-4 w-full'
+          value={newItem}
+          type='text'
+          placeholder='Tilføj ingrediens'
+          onChange={(e) => setNewItem(e.target.value)}
+          onBlur={handleCreateItem}
+        />
+        <button className='invisible'>Tilføj</button>
+      </form>
       {sortedItens(recipe?.ingredients)?.map((ingredient) => (
         <GroceryItem
           key={ingredient.id}

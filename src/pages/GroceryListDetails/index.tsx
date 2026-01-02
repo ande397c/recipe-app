@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { MainLayout } from '@/components/MainLayout';
 import {
   CreateGroceryItemInput,
   useCreateGroceryItem
-} from '@/services/groceryLists/useCreateGroceryItem';
-import { useUpdateGroceryItem } from '@/services/groceryLists/useUpdateGroceryItem';
+} from '@/services/groceryItem/useCreateGroceryItem';
+import { useUpdateGroceryItem } from '@/services/groceryItem/useUpdateGroceryItem';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
 import { useParams } from 'react-router-dom';
 import { GroceryItem } from '@/components/GroceryItem';
@@ -46,7 +46,8 @@ export const GroceryListDetails = () => {
     });
   };
 
-  const handleCreateItem = () => {
+  const handleCreateItem = (e: FormEvent) => {
+    e.preventDefault();
     const name = newItem.trim();
     if (!name) return;
 
@@ -91,14 +92,18 @@ export const GroceryListDetails = () => {
         }
         onDisplayDeleteListModal={() => setGroceryDetailsModal({ type: 'delete', listId: id })}
       />
-      <input
-        className='my-4'
-        value={newItem}
-        type='text'
-        placeholder='Create item'
-        onChange={(e) => setNewItem(e.target.value)}
-        onBlur={handleCreateItem}
-      />
+      <form onSubmit={handleCreateItem}>
+        <input
+          name='createGroceryItem'
+          className='w-full'
+          value={newItem}
+          type='text'
+          placeholder='Create item'
+          onChange={(e) => setNewItem(e.target.value)}
+          onBlur={handleCreateItem}
+        />
+        <button className='invisible'>Tilføj</button>
+      </form>
       {sortedItens(singleGroceryList?.grocery_items)?.map((item) => (
         <GroceryItem
           key={item.id}

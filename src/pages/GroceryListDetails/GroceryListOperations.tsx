@@ -1,6 +1,6 @@
 import { GroceryItem } from '@/interfaces/groceryItem';
-import { useBulkDeleteGroceryItems } from '@/services/groceryLists/useBulkDeleteGroceryItems';
-import { useBulkUpdateGroceryItems } from '@/services/groceryLists/useBulkUpdateGroceryItems';
+import { useBulkDeleteGroceryItems } from '@/services/groceryItem/useBulkDeleteGroceryItems';
+import { useBulkUpdateGroceryItems } from '@/services/groceryItem/useBulkUpdateGroceryItems';
 import { DropdownMenu, MenuItem } from '@/components/DropdownMenu';
 import {
   faAngleRight,

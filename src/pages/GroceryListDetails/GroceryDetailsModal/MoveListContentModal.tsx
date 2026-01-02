@@ -1,7 +1,7 @@
 import { BaseModal } from '@/components/BaseModal';
 import { MainLayout } from '@/components/MainLayout';
 import { GroceryItem } from '@/interfaces/groceryItem';
-import { useBulkInsertGroceryItems } from '@/services/groceryLists/useBulkInsertGroceryItems';
+import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
 import { FC } from 'react';
