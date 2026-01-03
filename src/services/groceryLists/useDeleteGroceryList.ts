@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 
 interface deleteGroceryListProps {
-  id: string;
+  id: number;
 }
 
 const deleteGroceryList = async ({ id }: deleteGroceryListProps) => {

@@ -18,7 +18,11 @@ export const ViewButtons: FC<ViewButtonsProps> = ({ isDenseView, onChangeView })
         value='list'
         onClick={onChangeView}
       >
-        <FontAwesomeIcon size='lg' icon={faBars} />
+        <FontAwesomeIcon
+          size='lg'
+          icon={faBars}
+          className={`${isDenseView ? 'text-amber-600' : ''}`}
+        />
       </Button>
       <Button
         variant={!isDenseView ? 'outline' : 'ghost'}
@@ -26,7 +30,11 @@ export const ViewButtons: FC<ViewButtonsProps> = ({ isDenseView, onChangeView })
         value='grid'
         onClick={onChangeView}
       >
-        <FontAwesomeIcon size='lg' icon={faGrip} />
+        <FontAwesomeIcon
+          size='lg'
+          icon={faGrip}
+          className={`${!isDenseView ? 'text-amber-600' : ''}`}
+        />
       </Button>
     </ButtonGroup>
   );

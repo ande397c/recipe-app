@@ -1,38 +1,66 @@
 import { FC, useState } from 'react';
 import { BaseModal } from '@/components/BaseModal';
 import { Input } from '@/components/Input';
+import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
+import { Skeleton } from '@/components/Skeleton';
+import { UpdateGroceryListInput, useUpdateGroceryList } from '@/services/groceryLists/useUpdateGroceryList';
 
 interface RenameListModalProps {
+  listId: string | undefined;
   onClose: () => void;
 }
 
-export const RenameListModal: FC<RenameListModalProps> = ({onClose}) => {
+export const RenameListModal: FC<RenameListModalProps> = ({ listId, onClose }) => {
+  const { data: groceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
+    Number(listId)
+  );
+  const { mutate: updateGroceryList, isPending: isUpdatingGroceryList } = useUpdateGroceryList();
   const [newlistName, setNewListName] = useState('');
 
   const handleRenameGroceryList = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('handleRenameGroceryList', newlistName);
+
+    const payload: UpdateGroceryListInput = {
+      id: Number(listId),
+      newName: newlistName
+    };
+    
+    updateGroceryList(
+      payload,
+      {
+        onSuccess: () => {
+          onClose();
+        },
+        onError: (error) => {
+          console.error('Error renaming grocery list:', error);
+        }
+      }
+    );
   };
 
   return (
-    <BaseModal
-      showModal={true}
-      title='Omdøb liste navn'
-      size='sm'
-      onClose={onClose}
-    >
+    <BaseModal showModal={true} title='Omdøb liste navn' size='sm' onClose={onClose}>
       <form onSubmit={handleRenameGroceryList}>
-        <Input
-          label='Indkøbsliste navn'
-          type='text'
-          placeholder='Basis vare'
-          onChange={(e) => setNewListName(e.target.value)}
-        />
-        <BaseModal.Actions>
-          <button type='submit' className='bg-black text-white px-4 py-2 rounded-md transition'>
-            Opret
-          </button>
-        </BaseModal.Actions>
+        {isLoadingListDeatils ? (
+          <div className='flex flex-col gap-4'>
+            <Skeleton shape='square' height='4rem' />
+          </div>
+        ) : (
+          <>
+            <Input
+              label='Indkøbsliste navn'
+              type='text'
+              defaultValue={groceryList?.list_name}
+              placeholder='Basis vare'
+              onChange={(e) => setNewListName(e.target.value)}
+            />
+            <BaseModal.Actions>
+              <button type='submit' className='bg-black text-white px-4 py-2 rounded-md transition' disabled={isUpdatingGroceryList}>
+                Omdøb
+              </button>
+            </BaseModal.Actions>
+          </>
+        )}
       </form>
     </BaseModal>
   );

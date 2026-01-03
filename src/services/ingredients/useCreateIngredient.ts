@@ -3,7 +3,7 @@ import { supabase } from '@/services/supabaseClient';
 
 export interface CreateIngredientInput {
   name: string;
-  recipeId: string | undefined;
+  recipeId: number | undefined;
 }
 
 const createIngredient = async ({ name, recipeId }: CreateIngredientInput) => {

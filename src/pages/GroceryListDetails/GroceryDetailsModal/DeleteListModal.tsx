@@ -18,7 +18,7 @@ export const DeleteListtModal: FC<DeleteListtModalProps> = ({ listId, onClose })
            return;
          }
          deleteGroceryList(
-           { id: listId },
+           { id: Number(listId) },
            {
              onSuccess: () => {
                navigate('/grocery-lists', { replace: true });

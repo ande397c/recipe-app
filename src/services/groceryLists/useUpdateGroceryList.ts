@@ -1,16 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 
-interface UpdateGroceryItemProps {
-  checked: boolean;
+export interface UpdateGroceryListInput {
   id: number;
+  newName: string;
 }
 
-const updateGroceryItem = async ({ checked, id }: UpdateGroceryItemProps) => {
-  const { data, error } = await supabase
-    .from('grocery_items')
-    .update({ is_checked: checked })
-    .eq('id', id);
+const updateGroceryList = async ({ newName, id }: UpdateGroceryListInput) => {
+  const { data, error } = await supabase.from('grocery_lists').update({ list_name: newName }).eq('id', id);
 
   if (error) {
     throw new Error(error.message);
@@ -19,11 +16,11 @@ const updateGroceryItem = async ({ checked, id }: UpdateGroceryItemProps) => {
   return data;
 };
 
-export const useUpdateGroceryItem = () => {
+export const useUpdateGroceryList = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: updateGroceryItem,
+    mutationFn: updateGroceryList,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['grocery-list'] });
     }

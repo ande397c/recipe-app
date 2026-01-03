@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 import { GroceryList } from '@/interfaces/groceryList';
 
-const fetchSingleGroceryList = async (id: string | undefined): Promise<GroceryList> => {
+const fetchSingleGroceryList = async (id: number): Promise<GroceryList> => {
+  if(!id) {
+    throw new Error('Invalid ID');
+  }
   const { data, error } = await supabase
     .from('grocery_lists')
     .select(
@@ -26,9 +29,9 @@ const fetchSingleGroceryList = async (id: string | undefined): Promise<GroceryLi
   return data;
 };
 
-export const useFetchSingleGroceryList = (id: string | undefined) => {
+export const useFetchSingleGroceryList = (id: number) => {
   return useQuery({
-    queryKey: ['grocery-lists', id],
+    queryKey: ['grocery-list', id],
     queryFn: () => fetchSingleGroceryList(id),
     enabled: !!id
   });

@@ -20,7 +20,10 @@ import {
   CreateIngredientInput,
   useCreateIngredient
 } from '@/services/ingredients/useCreateIngredient';
-import { CreateRecipeStepInput, useCreateRecipeStep } from '@/services/recipeSteps/useCreateRecipeStep';
+import {
+  CreateRecipeStepInput,
+  useCreateRecipeStep
+} from '@/services/recipeSteps/useCreateRecipeStep';
 import { useUpdateRecipeStep } from '@/services/recipeSteps/useUpdateRecipeStep';
 
 const sortedItens = (items: IngredientItem[] | undefined) => {
@@ -36,7 +39,7 @@ const sortedItens = (items: IngredientItem[] | undefined) => {
 
 export const RecipeDetail: FC = () => {
   const { id } = useParams();
-  const { data: recipe, isLoading } = useFetchSingleRecipe(id);
+  const { data: recipe, isLoading } = useFetchSingleRecipe(Number(id));
   const { mutate: createIngredient } = useCreateIngredient();
   const { mutate: updateIngredient } = useUpdateIngredient();
   const { mutate: createRecipeStep } = useCreateRecipeStep();
@@ -54,7 +57,7 @@ export const RecipeDetail: FC = () => {
 
     const payload: CreateRecipeStepInput = {
       instruction,
-      recipeId: id
+      recipeId: Number(id)
     };
 
     createRecipeStep(payload, {
@@ -67,12 +70,12 @@ export const RecipeDetail: FC = () => {
     });
   };
 
-    const handleUpdateRecipeStep = (id: number, is_completed: boolean) => {
-      updateRecipeStep({
-        is_completed,
-        id
-      });
-    };
+  const handleUpdateRecipeStep = (id: number, is_completed: boolean) => {
+    updateRecipeStep({
+      is_completed,
+      id
+    });
+  };
 
   const handleCreateItem = (e: FormEvent) => {
     e.preventDefault();
@@ -81,7 +84,7 @@ export const RecipeDetail: FC = () => {
 
     const payload: CreateIngredientInput = {
       name,
-      recipeId: id
+      recipeId: Number(id)
     };
 
     createIngredient(payload, {
@@ -104,12 +107,12 @@ export const RecipeDetail: FC = () => {
   const menuItems: MenuItem[] = [
     {
       label: 'Rediger opskrift',
-      onClick: () => setRecipeDetailsModal({ type: 'rename' }),
+      onClick: () => setRecipeDetailsModal({ type: 'rename', listId: Number(id) }),
       icon: faEdit
     },
     {
       label: 'Slet opskrift',
-      onClick: () => setRecipeDetailsModal({ type: 'delete', listId: id }),
+      onClick: () => setRecipeDetailsModal({ type: 'delete', listId: Number(id) }),
       icon: faTrashAlt,
       color: 'danger'
     }
@@ -150,19 +153,19 @@ export const RecipeDetail: FC = () => {
         </DropdownMenu>
       </div>
       {recipe?.img_url && (
-        <img src={recipe?.img_url} alt={recipe?.recipe_name} className='max-w-[25rem] rounded-sm' />
+        <img src={recipe?.img_url} alt={recipe?.recipe_name} className='max-w-[20rem] rounded-sm' />
       )}
       <h2 className='text-lg'>Fremgangsmåde</h2>
       <form onSubmit={handleCreateStep}>
-        <input
-          className='my-4 w-full'
+        <textarea
+          className='w-full'
+          rows={3}
           value={newStep}
-          type='text'
           placeholder='Tilføj step'
           onChange={(e) => setNewStep(e.target.value)}
           onBlur={handleCreateStep}
         />
-        <button className='invisible'>Tilføj</button>
+        <button className='hidden'>Tilføj</button>
       </form>
       <ol className='list-decimal pl-4 cursor-pointer'>
         {recipe?.recipe_steps.map((step) => (
@@ -179,14 +182,15 @@ export const RecipeDetail: FC = () => {
       <h2 className='text-lg'>Ingredienser</h2>
       <form onSubmit={handleCreateItem}>
         <input
-          className='my-4 w-full'
+          name='add'
+          className='w-full'
           value={newItem}
           type='text'
           placeholder='Tilføj ingrediens'
           onChange={(e) => setNewItem(e.target.value)}
           onBlur={handleCreateItem}
         />
-        <button className='invisible'>Tilføj</button>
+        <button className='hidden'>Tilføj</button>
       </form>
       {sortedItens(recipe?.ingredients)?.map((ingredient) => (
         <GroceryItem

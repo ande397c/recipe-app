@@ -15,10 +15,12 @@ interface MoveListContentModalProps {
 
 export const MoveListContentModal: FC<MoveListContentModalProps> = ({ listId, onClose }) => {
   const { data: groceryLists, isLoading: isLoadingLists } = useFetchGroceryLists();
-  const { data: singleGroceryList, isLoading: isLoadingListDeatils } =
-    useFetchSingleGroceryList(listId);
+  const { data: singleGroceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
+    Number(listId)
+  );
   const { mutate: bulkInsertGroceryItems } = useBulkInsertGroceryItems();
 
+  const pageIsLoading = isLoadingLists || isLoadingListDeatils;
   const listItems = singleGroceryList?.grocery_items as GroceryItem[];
 
   const availableLists = listId
@@ -46,7 +48,7 @@ export const MoveListContentModal: FC<MoveListContentModalProps> = ({ listId, on
     );
   };
 
-  if (isLoadingLists || isLoadingListDeatils) {
+  if (pageIsLoading) {
     return (
       <MainLayout>
         <p>Loading...</p>
@@ -55,7 +57,6 @@ export const MoveListContentModal: FC<MoveListContentModalProps> = ({ listId, on
   }
   return (
     <BaseModal showModal={true} title='Kopier indhold til anden liste' size='sm' onClose={onClose}>
-      <div>
         <label htmlFor='list-select'>Tilføj indhold til:</label>
         <select name='lists' id='list-select' onChange={(e) => addContentToList(e.target.value)}>
           <option value={PLACEHOLDER_LIST_VALUE}>Vælg liste</option>
@@ -65,7 +66,6 @@ export const MoveListContentModal: FC<MoveListContentModalProps> = ({ listId, on
             </option>
           ))}
         </select>
-      </div>
     </BaseModal>
   );
 };

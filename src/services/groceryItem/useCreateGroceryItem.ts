@@ -3,7 +3,7 @@ import { supabase } from '@/services/supabaseClient';
 
 export interface CreateGroceryItemInput {
   name: string;
-  listId: string | undefined;
+  listId: number | undefined;
 }
 
 const createGroceryItem = async ({ name, listId }: CreateGroceryItemInput) => {
@@ -28,7 +28,7 @@ export const useCreateGroceryItem = () => {
     mutationFn: createGroceryItem,
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ['grocery-lists', variables.listId]
+        queryKey: ['grocery-list', variables.listId]
       });
     }
   });

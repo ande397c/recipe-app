@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 import { RecipeItem } from '@/interfaces/recipeItem';
 
-const fetchSingleRecipe = async (id: string | undefined): Promise<RecipeItem> => {
+const fetchSingleRecipe = async (id: number | undefined): Promise<RecipeItem> => {
   const { data, error } = await supabase
     .from('recipes')
     .select(
@@ -21,8 +21,10 @@ const fetchSingleRecipe = async (id: string | undefined): Promise<RecipeItem> =>
       instruction, 
       is_completed
     )
-  `)
+  `
+    )
     .eq('id', id)
+    .order('id', { foreignTable: 'recipe_steps' })
     .single();
 
   if (error) {
@@ -32,7 +34,7 @@ const fetchSingleRecipe = async (id: string | undefined): Promise<RecipeItem> =>
   return data;
 };
 
-export const useFetchSingleRecipe = (id: string | undefined) => {
+export const useFetchSingleRecipe = (id: number | undefined) => {
   return useQuery({
     queryKey: ['recipe', id],
     queryFn: () => fetchSingleRecipe(id),

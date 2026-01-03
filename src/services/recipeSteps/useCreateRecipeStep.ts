@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 
 export interface CreateRecipeStepInput {
+  recipeId: number | undefined;
   instruction: string;
-  recipeId: string | undefined;
 }
 
 const createIngredient = async ({ instruction, recipeId }: CreateRecipeStepInput) => {

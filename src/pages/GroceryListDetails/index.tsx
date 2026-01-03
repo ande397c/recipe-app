@@ -11,7 +11,7 @@ import { GroceryItem } from '@/components/GroceryItem';
 import { GroceryListOperations } from './GroceryListOperations';
 import { GroceryDetailsModals, GroceryDetailsModalsProps } from './GroceryDetailsModal';
 import { Skeleton } from '@/components/Skeleton';
-import {GroceryItem as GroceryItemInterface} from '@/interfaces/groceryItem';
+import { GroceryItem as GroceryItemInterface } from '@/interfaces/groceryItem';
 
 const sortedItens = (items: GroceryItemInterface[] | undefined) => {
   if (!items) {
@@ -26,8 +26,9 @@ const sortedItens = (items: GroceryItemInterface[] | undefined) => {
 
 export const GroceryListDetails = () => {
   const { id } = useParams();
-  const { data: singleGroceryList, isLoading: isLoadingListDeatils } =
-    useFetchSingleGroceryList(id);
+  const { data: singleGroceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
+    Number(id)
+  );
   const { mutate: createGroceryItem } = useCreateGroceryItem();
   const { mutate: updateGroceryItem } = useUpdateGroceryItem();
   const [newItem, setNewItem] = useState('');
@@ -53,7 +54,7 @@ export const GroceryListDetails = () => {
 
     const payload: CreateGroceryItemInput = {
       name,
-      listId: id
+      listId: Number(id)
     };
 
     createGroceryItem(payload, {
@@ -86,7 +87,7 @@ export const GroceryListDetails = () => {
 
       <GroceryListOperations
         listItems={singleGroceryList?.grocery_items ?? []}
-        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename' })}
+        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename', listId: id })}
         onDisplayMoveContentModal={() =>
           setGroceryDetailsModal({ type: 'moveContent', listId: id })
         }
@@ -102,7 +103,7 @@ export const GroceryListDetails = () => {
           onChange={(e) => setNewItem(e.target.value)}
           onBlur={handleCreateItem}
         />
-        <button className='invisible'>Tilføj</button>
+        <button className='hidden'>Tilføj</button>
       </form>
       {sortedItens(singleGroceryList?.grocery_items)?.map((item) => (
         <GroceryItem

@@ -31,7 +31,6 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
       onSuccess: (newList) => {
         onClose();
         if (formData.redirectOnSuccess) {
-          console.log(newList?.id);
           navigate(`/recipes/${newList?.id}`);
         }
       },

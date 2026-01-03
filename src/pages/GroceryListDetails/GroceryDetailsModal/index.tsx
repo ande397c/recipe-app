@@ -4,6 +4,7 @@ import { RenameListModal } from './RenameListModal';
 import { DeleteListtModal } from './DeleteListModal';
 
 type RenameListModal = {
+  listId: string | undefined;
   type: 'rename';
 };
 

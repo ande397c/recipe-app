@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDeleteRecipe } from '@/services/recipies/useDeleteRecipe';
 
 interface DeleteRecipeModalProps {
-  listId: string | undefined;
+  listId: number | undefined;
   onClose: () => void;
 }
 

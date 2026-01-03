@@ -29,7 +29,7 @@ export const useBulkUpdateGroceryItems = () => {
   return useMutation({
     mutationFn: bulkUpdateGroceryItems,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['grocery-lists'] });
+      queryClient.invalidateQueries({ queryKey: ['grocery-list'] });
     }
   });
 };
