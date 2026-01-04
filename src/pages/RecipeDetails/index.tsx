@@ -26,6 +26,7 @@ import {
   useCreateRecipeStep
 } from '@/services/recipeSteps/useCreateRecipeStep';
 import { useUpdateRecipeStep } from '@/services/recipeSteps/useUpdateRecipeStep';
+import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/shadcn/item';
 
 const sortedItens = (items: IngredientItem[] | undefined) => {
   if (!items) {
@@ -150,9 +151,16 @@ export const RecipeDetail: FC = () => {
         })}
       >
         {recipe?.img_url && (
-          <a href={recipe?.recipe_url} target='_blank'>
-            <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-          </a>
+          <Item variant='outline' asChild className='p-2'>
+            <a href={recipe?.recipe_url} target='_blank' rel='noopener noreferrer'>
+              <ItemContent>
+                <ItemTitle>Gå til link</ItemTitle>
+              </ItemContent>
+              <ItemActions>
+                <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+              </ItemActions>
+            </a>
+          </Item>
         )}
         <DropdownMenu menuItems={menuItems}>
           <FontAwesomeIcon icon={faEllipsis} />

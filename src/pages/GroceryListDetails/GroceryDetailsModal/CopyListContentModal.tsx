@@ -1,15 +1,16 @@
 import { BaseModal } from '@/components/BaseModal';
 import { Button } from '@/components/shadcn/button';
+import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/shadcn/item';
+import { ScrollArea } from '@/components/shadcn/scroll-area';
+import { Spinner } from '@/components/shadcn/spinner';
 import { Skeleton } from '@/components/Skeleton';
 import { GroceryItem } from '@/interfaces/groceryItem';
 import { GroceryList } from '@/interfaces/groceryList';
 import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
-import { FC } from 'react';
+import { FC, FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const PLACEHOLDER_LIST_VALUE = 'placeholder';
 
 interface CopyListContentModalProps {
   listId: number | undefined;
@@ -21,20 +22,24 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
   const { data: singleGroceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
     Number(listId)
   );
-  const { mutate: bulkInsertGroceryItems } = useBulkInsertGroceryItems();
+  const { mutate: bulkInsertGroceryItems, isPending: isBulkInserting } = useBulkInsertGroceryItems();
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+
   const pageIsLoading = isLoadingLists || isLoadingListDeatils;
   const listItems = singleGroceryList?.grocery_items as GroceryItem[];
   const availableLists = listId
     ? groceryLists?.filter((list) => list.id !== Number(listId))
     : groceryLists;
 
-  const addContentToList = (listId: string) => {
-    if (listId === PLACEHOLDER_LIST_VALUE || !listItems) {
+  const addContentToList = (e: FormEvent) => {
+    e.preventDefault();
+    if (!listItems) {
       return;
     }
 
     const bulkInput =
-      listItems?.map((item) => ({ grocery_item: item.grocery_item, list_id: listId })) || [];
+      listItems?.map((item) => ({ grocery_item: item.grocery_item, list_id: selectedListId })) ||
+      [];
     bulkInsertGroceryItems(
       { bulkInput },
       {
@@ -49,25 +54,44 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
   };
 
   return (
-    <BaseModal showModal={true} title='Kopier indhold til anden liste' size='sm' onClose={onClose}>
-      {pageIsLoading ? (
-        <div className='flex flex-col gap-2'>
-          <Skeleton shape='rect' width='20%' />
-          <Skeleton shape='rect' height='4rem' />
-        </div>
-      ) : (
-        <ReassignSelect availableLists={availableLists} addContentToList={addContentToList} />
-      )}
+    <BaseModal showModal={true} title='Kopier indkøb' size='sm' onClose={onClose}>
+      <form onSubmit={addContentToList}>
+        {pageIsLoading ? (
+          <div className='flex flex-col gap-2'>
+            <Skeleton shape='rect' width='20%' />
+            <Skeleton shape='rect' height='4rem' />
+          </div>
+        ) : (
+          <ScrollArea className='h-60'>
+            <ReassignSelect
+              availableLists={availableLists}
+              onSelectList={(id) => setSelectedListId(id)}
+              selectedId={selectedListId}
+            />
+          </ScrollArea>
+        )}
+        <BaseModal.Actions>
+          <Button variant='default' disabled={!!selectedListId || isBulkInserting}>
+            {isBulkInserting && <Spinner />}
+            Bekræft
+          </Button>
+        </BaseModal.Actions>
+      </form>
     </BaseModal>
   );
 };
 
 interface ReassignSelectProps {
+  selectedId?: number | null;
   availableLists?: GroceryList[];
-  addContentToList: (listId: string) => void;
+  onSelectList: (listId: number) => void;
 }
 
-export const ReassignSelect: FC<ReassignSelectProps> = ({ availableLists, addContentToList }) => {
+export const ReassignSelect: FC<ReassignSelectProps> = ({
+  selectedId,
+  availableLists,
+  onSelectList
+}) => {
   if (!availableLists || availableLists.length === 0) {
     return (
       <div className='flex flex-col gap-2'>
@@ -78,23 +102,23 @@ export const ReassignSelect: FC<ReassignSelectProps> = ({ availableLists, addCon
       </div>
     );
   }
+
   return (
-    <>
-      <label htmlFor='list-select'>Tilføj indhold til:</label>
-      <select
-        name='lists'
-        id='list-select'
-        onChange={(e) => {
-          addContentToList(e.target.value);
-        }}
-      >
-        <option value={PLACEHOLDER_LIST_VALUE}>Vælg liste</option>
-        {availableLists?.map((list) => (
-          <option key={list.id} value={list.id}>
-            {list.list_name}
-          </option>
-        ))}
-      </select>
-    </>
+    <div className='flex flex-col'>
+      {availableLists.map((list) => (
+        <button key={list.id} className='hover:bg-muted rounded-sm transition' type='button'>
+          <Item
+            variant={list.id === selectedId ? 'outline' : 'default'}
+            className='p-3 text-left'
+            onClick={() => onSelectList(Number(list.id))}
+          >
+            <ItemContent className='gap-0'>
+              <ItemTitle>{list.list_name}</ItemTitle>
+              <ItemDescription>Antal indkøb: {list.grocery_items?.length ?? 0}</ItemDescription>
+            </ItemContent>
+          </Item>
+        </button>
+      ))}
+    </div>
   );
 };

@@ -3,7 +3,12 @@ import { BaseModal } from '@/components/BaseModal';
 import { Input } from '@/components/Input';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
 import { Skeleton } from '@/components/Skeleton';
-import { UpdateGroceryListInput, useUpdateGroceryList } from '@/services/groceryLists/useUpdateGroceryList';
+import {
+  UpdateGroceryListInput,
+  useUpdateGroceryList
+} from '@/services/groceryLists/useUpdateGroceryList';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface RenameListModalProps {
   listId: number | undefined;
@@ -24,18 +29,15 @@ export const RenameListModal: FC<RenameListModalProps> = ({ listId, onClose }) =
       id: Number(listId),
       newName: newlistName
     };
-    
-    updateGroceryList(
-      payload,
-      {
-        onSuccess: () => {
-          onClose();
-        },
-        onError: (error) => {
-          console.error('Error renaming grocery list:', error);
-        }
+
+    updateGroceryList(payload, {
+      onSuccess: () => {
+        onClose();
+      },
+      onError: (error) => {
+        console.error('Error renaming grocery list:', error);
       }
-    );
+    });
   };
 
   return (
@@ -48,16 +50,17 @@ export const RenameListModal: FC<RenameListModalProps> = ({ listId, onClose }) =
         ) : (
           <>
             <Input
-              label='Indkøbsliste navn'
+              label='Navn'
               type='text'
               defaultValue={groceryList?.list_name}
               placeholder='Basis vare'
               onChange={(e) => setNewListName(e.target.value)}
             />
             <BaseModal.Actions>
-              <button type='submit' className='bg-black text-white px-4 py-2 rounded-md transition' disabled={isUpdatingGroceryList}>
+              <Button disabled={isUpdatingGroceryList}>
+                {isUpdatingGroceryList && <Spinner />}
                 Omdøb
-              </button>
+              </Button>
             </BaseModal.Actions>
           </>
         )}

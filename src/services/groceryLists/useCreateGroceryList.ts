@@ -26,9 +26,9 @@ export const useCreateGroceryList = () => {
 
   return useMutation({
     mutationFn: createGroceryList,
-    onSuccess: (_data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['grocery-lists', variables.name]
+        queryKey: ['grocery-lists']
       });
     }
   });

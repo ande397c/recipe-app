@@ -3,6 +3,8 @@ import { BaseModal } from '@/components/BaseModal';
 import { Input } from '@/components/Input';
 import { useCreateGroceryList } from '@/services/groceryLists/useCreateGroceryList';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface AddGroceryListModalProps {
     showModal: boolean;
@@ -11,7 +13,7 @@ interface AddGroceryListModalProps {
 
 export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, onClose }) => {
   const navigate = useNavigate();
-  const { mutate: createGroceryList } = useCreateGroceryList();
+  const { mutate: createGroceryList, isPending: isCreatingGroceryList } = useCreateGroceryList();
   const [redirectOnSuccess, setRedirectOnSuccess] = useState(true);
   const [groceryListName, setGroceryListName] = useState('');
 
@@ -33,12 +35,7 @@ export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, o
   };
 
   return (
-    <BaseModal
-      showModal={showModal}
-      title='Tilføj indkøbsliste'
-      size='sm'
-      onClose={onClose}
-    >
+    <BaseModal showModal={showModal} title='Opret ny indkøbsliste' size='sm' onClose={onClose}>
       <form onSubmit={handleCreateGroceryList}>
         <Input
           label='Indkøbsliste navn'
@@ -56,12 +53,10 @@ export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, o
         />
         <label htmlFor='redirectOnSuccess'>Åben nyoprettede liste?</label>
         <BaseModal.Actions>
-          <button
-            type='submit'
-            className='bg-black text-white px-4 py-2 rounded-md transition cursor-pointer'
-          >
+          <Button disabled={isCreatingGroceryList}>
+            {isCreatingGroceryList && <Spinner />}
             Opret
-          </button>
+          </Button>
         </BaseModal.Actions>
       </form>
     </BaseModal>

@@ -4,6 +4,8 @@ import { Input } from '@/components/Input';
 import { UpdateRecipeInput, useUpdateRecipe } from '@/services/recipies/useUpdateRecipe';
 import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie';
 import { Skeleton } from '@/components/Skeleton';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface RenameRecipeModalProps {
   recipeId: number | undefined;
@@ -79,13 +81,10 @@ export const RenameRecipeModal: FC<RenameRecipeModalProps> = ({ recipeId, onClos
           </>
         )}
         <BaseModal.Actions>
-          <button
-            type='submit'
-            className='bg-black text-white px-4 py-2 rounded-md transition'
-            disabled={isUpdatingRecipe}
-          >
+          <Button disabled={isUpdatingRecipe}>
+            {isUpdatingRecipe && <Spinner />}
             Rediger
-          </button>
+          </Button>
         </BaseModal.Actions>
       </form>
     </BaseModal>

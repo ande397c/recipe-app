@@ -3,10 +3,13 @@ import { BaseModal } from '@/components/BaseModal';
 import { Input } from '@/components/Input';
 import { useCreateRecipe } from '@/services/recipies/useCreateRecipe';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 
 interface FormData {
   name: string;
   link: string;
+  imgageUrl: string;
   redirectOnSuccess: boolean;
 }
 
@@ -20,9 +23,10 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
   const [formData, setFormData] = useState<FormData>({
     name: '',
     link: '',
+    imgageUrl: '',
     redirectOnSuccess: true
   });
-  const { mutate: createRecipe } = useCreateRecipe();
+  const { mutate: createRecipe, isPending: isCreatingRecipe } = useCreateRecipe();
 
   const handleCreateRecipe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +53,8 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
     }));
   };
 
-
   return (
-    <BaseModal showModal={displayModal} title='Tilføj opsktift' size='sm' onClose={onClose}>
+    <BaseModal showModal={displayModal} title='Opret ny opskrift' size='sm' onClose={onClose}>
       <form onSubmit={handleCreateRecipe}>
         <Input
           label='Opskrift navn'
@@ -79,12 +82,10 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
         />
         <label htmlFor='redirectOnSuccess'>Åben nyoprettede liste?</label>
         <BaseModal.Actions>
-          <button
-            type='submit'
-            className='bg-black text-white px-4 py-2 rounded-md transition cursor-pointer'
-          >
+          <Button disabled={isCreatingRecipe}>
+            {isCreatingRecipe && <Spinner />}
             Opret
-          </button>
+          </Button>
         </BaseModal.Actions>
       </form>
     </BaseModal>

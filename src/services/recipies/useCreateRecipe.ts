@@ -5,7 +5,7 @@ import { GroceryList } from '@/interfaces/groceryList';
 export interface CreateRecipeInput {
   name: string;
   link: string;
-  imgageUrl?: string;
+  imgageUrl: string;
 }
 
 const createRecipe = async ({ name, link, imgageUrl }: CreateRecipeInput): Promise<GroceryList> => {
