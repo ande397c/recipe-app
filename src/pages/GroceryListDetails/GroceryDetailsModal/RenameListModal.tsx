@@ -6,7 +6,7 @@ import { Skeleton } from '@/components/Skeleton';
 import { UpdateGroceryListInput, useUpdateGroceryList } from '@/services/groceryLists/useUpdateGroceryList';
 
 interface RenameListModalProps {
-  listId: string | undefined;
+  listId: number | undefined;
   onClose: () => void;
 }
 

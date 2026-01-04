@@ -68,7 +68,7 @@ export const GroceryListOperations = ({
   };
 
   const menuItems: MenuItem[] = [
-    { label: 'Kopier liste indhold', onClick: onDisplayMoveContentModal, icon: faAngleRight },
+    { label: 'Kopier indhold', onClick: onDisplayMoveContentModal, icon: faAngleRight },
     { label: 'Check alle', onClick: handleCheckAll, icon: faCheck },
     { label: 'Omdøb liste', onClick: onDisplayRenameModal, icon: faEdit },
     { label: 'Clear liste', onClick: handleDeleteAll, icon: faX },

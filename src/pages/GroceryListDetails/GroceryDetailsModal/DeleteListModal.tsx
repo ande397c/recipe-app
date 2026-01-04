@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDeleteGroceryList } from '@/services/groceryLists/useDeleteGroceryList';
 
 interface DeleteListtModalProps {
-  listId: string | undefined;
+  listId: number | undefined;
   onClose: () => void;
 }
 

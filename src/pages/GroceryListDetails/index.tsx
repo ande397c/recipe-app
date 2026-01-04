@@ -87,11 +87,11 @@ export const GroceryListDetails = () => {
 
       <GroceryListOperations
         listItems={singleGroceryList?.grocery_items ?? []}
-        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename', listId: id })}
+        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename', listId: Number(id) })}
         onDisplayMoveContentModal={() =>
-          setGroceryDetailsModal({ type: 'moveContent', listId: id })
+          setGroceryDetailsModal({ type: 'copyContent', listId: Number(id) })
         }
-        onDisplayDeleteListModal={() => setGroceryDetailsModal({ type: 'delete', listId: id })}
+        onDisplayDeleteListModal={() => setGroceryDetailsModal({ type: 'delete', listId: Number(id) })}
       />
       <form onSubmit={handleCreateItem}>
         <input

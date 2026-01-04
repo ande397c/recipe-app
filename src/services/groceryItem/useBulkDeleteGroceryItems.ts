@@ -6,7 +6,6 @@ interface bulkDeleteGroceryItemsInput {
 }
 
 const bulkDeleteGroceryItems = async ({ ids }: bulkDeleteGroceryItemsInput) => {
-  console.log(ids);
   const { data, error } = await supabase.from('grocery_items').delete().in('id', ids).select();
 
   if (error) {
@@ -22,7 +21,7 @@ export const useBulkDeleteGroceryItems = () => {
   return useMutation({
     mutationFn: bulkDeleteGroceryItems,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['grocery-lists'] });
+      queryClient.invalidateQueries({ queryKey: ['grocery-list'] });
     }
   });
 };

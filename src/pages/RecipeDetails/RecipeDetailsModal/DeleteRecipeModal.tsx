@@ -4,21 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import { useDeleteRecipe } from '@/services/recipies/useDeleteRecipe';
 
 interface DeleteRecipeModalProps {
-  listId: number | undefined;
+  recipeId: number | undefined;
   onClose: () => void;
 }
 
-export const DeleteRecipeModal: FC<DeleteRecipeModalProps> = ({ listId, onClose }) => {
+export const DeleteRecipeModal: FC<DeleteRecipeModalProps> = ({ recipeId, onClose }) => {
   const navigate = useNavigate();
   const { mutate: deleteRecipe } = useDeleteRecipe();
 
   const handleDeleteList = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!listId) {
+    if (!recipeId) {
       return;
     }
     deleteRecipe(
-      { id: listId },
+      { id: recipeId },
       {
         onSuccess: () => {
           navigate('/recipes', { replace: true });

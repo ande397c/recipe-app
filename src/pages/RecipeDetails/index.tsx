@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faAngleRight,
   faArrowUpRightFromSquare,
   faEdit,
   faEllipsis,
@@ -106,13 +107,18 @@ export const RecipeDetail: FC = () => {
 
   const menuItems: MenuItem[] = [
     {
+      label: 'Kopier ingredienser',
+      onClick: () => setRecipeDetailsModal({ type: 'copyIngredients', recipeId: Number(id) }),
+      icon: faAngleRight
+    },
+    {
       label: 'Rediger opskrift',
-      onClick: () => setRecipeDetailsModal({ type: 'rename', listId: Number(id) }),
+      onClick: () => setRecipeDetailsModal({ type: 'rename', recipeId: Number(id) }),
       icon: faEdit
     },
     {
       label: 'Slet opskrift',
-      onClick: () => setRecipeDetailsModal({ type: 'delete', listId: Number(id) }),
+      onClick: () => setRecipeDetailsModal({ type: 'delete', recipeId: Number(id) }),
       icon: faTrashAlt,
       color: 'danger'
     }

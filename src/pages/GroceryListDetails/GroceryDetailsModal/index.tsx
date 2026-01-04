@@ -1,24 +1,24 @@
 import { FC } from 'react';
-import { MoveListContentModal } from './MoveListContentModal';
+import { CopyListContentModal } from './CopyListContentModal';
 import { RenameListModal } from './RenameListModal';
 import { DeleteListtModal } from './DeleteListModal';
 
 type RenameListModal = {
-  listId: string | undefined;
+  listId: number | undefined;
   type: 'rename';
 };
 
-type MoveListContentModal = {
-  listId: string | undefined;
-  type: 'moveContent';
+type CopyListContentModal = {
+  listId: number | undefined;
+  type: 'copyContent';
 };
 
 type DeleteListModal = {
-  listId: string | undefined;
+  listId: number | undefined;
   type: 'delete';
 };
 
-export type GroceryDetailsModalsProps = RenameListModal | MoveListContentModal | DeleteListModal;
+export type GroceryDetailsModalsProps = RenameListModal | CopyListContentModal | DeleteListModal;
 
 export const GroceryDetailsModals: FC<GroceryDetailsModalsProps & { onClose: () => void }> = (
   props
@@ -26,8 +26,8 @@ export const GroceryDetailsModals: FC<GroceryDetailsModalsProps & { onClose: () 
   switch (props.type) {
     case 'rename':
       return <RenameListModal {...props} />;
-    case 'moveContent':
-      return <MoveListContentModal {...props} />;
+    case 'copyContent':
+      return <CopyListContentModal {...props} />;
     case 'delete':
       return <DeleteListtModal {...props} />;
     default:

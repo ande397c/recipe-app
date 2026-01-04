@@ -6,7 +6,7 @@ import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie'
 import { Skeleton } from '@/components/Skeleton';
 
 interface RenameRecipeModalProps {
-  listId: number | undefined;
+  recipeId: number | undefined;
   onClose: () => void;
 }
 
@@ -15,9 +15,9 @@ interface FormData {
   link: string;
 }
 
-export const RenameRecipeModal: FC<RenameRecipeModalProps> = ({ listId, onClose }) => {
+export const RenameRecipeModal: FC<RenameRecipeModalProps> = ({ recipeId, onClose }) => {
   const { mutate: updateRecipe, isPending: isUpdatingRecipe } = useUpdateRecipe();
-  const { data: recipe, isLoading: isRecipeLoading } = useFetchSingleRecipe(listId);
+  const { data: recipe, isLoading: isRecipeLoading } = useFetchSingleRecipe(recipeId);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     link: ''
@@ -34,11 +34,11 @@ export const RenameRecipeModal: FC<RenameRecipeModalProps> = ({ listId, onClose 
 
   const handleRenameGroceryList = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!listId) {
+    if (!recipeId) {
       return;
     }
     const payload: UpdateRecipeInput = {
-      id: listId,
+      id: recipeId,
       recipe_name: formData.name,
       recipe_url: formData.link
     };
