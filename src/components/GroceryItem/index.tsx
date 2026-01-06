@@ -15,19 +15,19 @@ export const GroceryItem: React.FC<GroceryItemProps> = ({ id, name, isChecked, o
   return (
     <div className='flex items-center gap-2'>
       <input
-        className='m-2'
+        className='m-2 w-4 h-4 text-white accent-orange-600 rounded-xs'
         type='checkbox'
-        id={name}
+        id={String(id)}
         name={name}
         checked={isChecked}
         onChange={handleInputChange}
       />
       <label
-        className={clsx('w-full', {
+        htmlFor={String(id)}
+        className={clsx('select-none ms-2 font-medium text-heading', {
           'text-black': !isChecked,
           'text-black line-through': isChecked
         })}
-        htmlFor={name}
       >
         {name}
       </label>

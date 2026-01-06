@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC, useState } from 'react';
 import { MainLayout } from '@/components/MainLayout';
 import { useParams } from 'react-router-dom';
 import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie';
@@ -14,96 +14,30 @@ import { DropdownMenu, MenuItem } from '@/components/DropdownMenu';
 import { RecipeyDetailsModals, RecipeyDetailsModalsProps } from './RecipeDetailsModal';
 import clsx from 'clsx';
 import { Skeleton } from '@/components/Skeleton';
-import { GroceryItem } from '@/components/GroceryItem';
-import { IngredientItem } from '@/interfaces/ingredientItem';
-import { useUpdateIngredient } from '@/services/ingredients/useUpdateIngredient';
-import {
-  CreateIngredientInput,
-  useCreateIngredient
-} from '@/services/ingredients/useCreateIngredient';
-import {
-  CreateRecipeStepInput,
-  useCreateRecipeStep
-} from '@/services/recipeSteps/useCreateRecipeStep';
-import { useUpdateRecipeStep } from '@/services/recipeSteps/useUpdateRecipeStep';
 import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/shadcn/item';
-
-const sortedItens = (items: IngredientItem[] | undefined) => {
-  if (!items) {
-    return [];
-  }
-  return items.sort((a, b) => {
-    if (a.is_checked && !b.is_checked) return 1;
-    if (!a.is_checked && b.is_checked) return -1;
-    return a.ingredient_name.localeCompare(b.ingredient_name);
-  });
-};
+import { RecipeDetailsSteps } from '@/pages/RecipeDetails/RecipeDetailsSteps';
+import { RecipeDetailsIngredients } from './RecipeDetailsIngredients';
+import { ChangeRecipeDetailsView } from './ChangeRecipeDetailsView';
+import { RecipeDetailsView } from '@/constants';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 export const RecipeDetail: FC = () => {
   const { id } = useParams();
+  const { setItem, getItem } = useLocalStorage('recipeDetailsView');
   const { data: recipe, isLoading } = useFetchSingleRecipe(Number(id));
-  const { mutate: createIngredient } = useCreateIngredient();
-  const { mutate: updateIngredient } = useUpdateIngredient();
-  const { mutate: createRecipeStep } = useCreateRecipeStep();
-  const { mutate: updateRecipeStep } = useUpdateRecipeStep();
-  const [newStep, setNewStep] = useState('');
-  const [newItem, setNewItem] = useState('');
+  const [recipeDetailsView, setRecipeDetailsView] = useState<RecipeDetailsView>(
+    getItem() ?? 'grid'
+  );
   const [recipeDetailsModal, setRecipeDetailsModal] = useState<RecipeyDetailsModalsProps | null>(
     null
   );
 
-  const handleCreateStep = (e: FormEvent) => {
-    e.preventDefault();
-    const instruction = newStep.trim();
-    if (!instruction) return;
+  const isStepView = recipeDetailsView === 'steps';
 
-    const payload: CreateRecipeStepInput = {
-      instruction,
-      recipeId: Number(id)
-    };
-
-    createRecipeStep(payload, {
-      onSuccess: () => {
-        setNewStep('');
-      },
-      onError: (error) => {
-        console.error('Error creating recipe step:', error);
-      }
-    });
-  };
-
-  const handleUpdateRecipeStep = (id: number, is_completed: boolean) => {
-    updateRecipeStep({
-      is_completed,
-      id
-    });
-  };
-
-  const handleCreateItem = (e: FormEvent) => {
-    e.preventDefault();
-    const name = newItem.trim();
-    if (!name) return;
-
-    const payload: CreateIngredientInput = {
-      name,
-      recipeId: Number(id)
-    };
-
-    createIngredient(payload, {
-      onSuccess: () => {
-        setNewItem('');
-      },
-      onError: (error) => {
-        console.error('Error creating grocery item:', error);
-      }
-    });
-  };
-
-  const handleUpdateItem = (id: number, checked: boolean) => {
-    updateIngredient({
-      checked,
-      id
-    });
+  const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const viewValue = e.currentTarget.value as RecipeDetailsView;
+    setRecipeDetailsView(viewValue);
+    setItem(viewValue);
   };
 
   const menuItems: MenuItem[] = [
@@ -169,52 +103,12 @@ export const RecipeDetail: FC = () => {
       {recipe?.img_url && (
         <img src={recipe?.img_url} alt={recipe?.recipe_name} className='max-w-[20rem] rounded-sm' />
       )}
-      <h2 className='text-lg'>Fremgangsmåde</h2>
-      <form onSubmit={handleCreateStep}>
-        <textarea
-          className='w-full'
-          rows={3}
-          value={newStep}
-          placeholder='Tilføj step'
-          onChange={(e) => setNewStep(e.target.value)}
-          onBlur={handleCreateStep}
-        />
-        <button className='hidden'>Tilføj</button>
-      </form>
-      <ol className='list-decimal pl-4 cursor-pointer'>
-        {recipe?.recipe_steps.map((step) => (
-          <li
-            key={step.instruction}
-            className={clsx('mb-2', step.is_completed && 'line-through')}
-            onClick={() => handleUpdateRecipeStep(step.id, !step.is_completed)}
-          >
-            {step.instruction}
-          </li>
-        ))}
-      </ol>
-
-      <h2 className='text-lg'>Ingredienser</h2>
-      <form onSubmit={handleCreateItem}>
-        <input
-          name='add'
-          className='w-full'
-          value={newItem}
-          type='text'
-          placeholder='Tilføj ingrediens'
-          onChange={(e) => setNewItem(e.target.value)}
-          onBlur={handleCreateItem}
-        />
-        <button className='hidden'>Tilføj</button>
-      </form>
-      {sortedItens(recipe?.ingredients)?.map((ingredient) => (
-        <GroceryItem
-          key={ingredient.id}
-          id={ingredient.id}
-          name={ingredient.ingredient_name}
-          isChecked={ingredient.is_checked}
-          onChange={handleUpdateItem}
-        />
-      ))}
+      <ChangeRecipeDetailsView isStepView={isStepView} onChangeView={handleViewChange} />
+      {isStepView ? (
+        <RecipeDetailsSteps steps={recipe?.recipe_steps ?? []} recipeId={Number(id)} />
+      ) : (
+        <RecipeDetailsIngredients ingredients={recipe?.ingredients ?? []} recipeId={Number(id)} />
+      )}
     </MainLayout>
   );
 };

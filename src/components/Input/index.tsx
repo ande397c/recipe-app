@@ -8,9 +8,11 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export const Input = ({ label, error, ...inputProps }: InputProps) => {
   return (
     <>
-      <label className='block' htmlFor={inputProps.name}>
-        {label && label}
-      </label>
+      {label && (
+        <label className='block' htmlFor={inputProps.name}>
+          {label}
+        </label>
+      )}
       <input
         {...inputProps}
         className={clsx('w-full h-8 rounded-md pl-2', {

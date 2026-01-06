@@ -99,7 +99,7 @@ export const GroceryListDetails = () => {
           className='w-full'
           value={newItem}
           type='text'
-          placeholder='Create item'
+          placeholder='Tilføj indkøb'
           onChange={(e) => setNewItem(e.target.value)}
           onBlur={handleCreateItem}
         />

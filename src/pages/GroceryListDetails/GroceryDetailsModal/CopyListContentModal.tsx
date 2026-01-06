@@ -9,7 +9,7 @@ import { GroceryList } from '@/interfaces/groceryList';
 import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
-import { FC, FormEvent, useState } from 'react';
+import { CSSProperties, FC, FormEvent, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface CopyListContentModalProps {
@@ -22,7 +22,8 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
   const { data: singleGroceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
     Number(listId)
   );
-  const { mutate: bulkInsertGroceryItems, isPending: isBulkInserting } = useBulkInsertGroceryItems();
+  const { mutate: bulkInsertGroceryItems, isPending: isBulkInserting } =
+    useBulkInsertGroceryItems();
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
 
   const pageIsLoading = isLoadingLists || isLoadingListDeatils;
@@ -30,6 +31,15 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
   const availableLists = listId
     ? groceryLists?.filter((list) => list.id !== Number(listId))
     : groceryLists;
+
+  const computedHeightStyles: CSSProperties = useMemo(
+    () => ({
+      height: String((availableLists?.length ?? 0) * 3) + 'rem',
+      minHeight: '5rem',
+      maxHeight: '15rem'
+    }),
+    [availableLists]
+  );
 
   const addContentToList = (e: FormEvent) => {
     e.preventDefault();
@@ -62,7 +72,7 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
             <Skeleton shape='rect' height='4rem' />
           </div>
         ) : (
-          <ScrollArea className='h-60'>
+          <ScrollArea style={computedHeightStyles}>
             <ReassignSelect
               availableLists={availableLists}
               onSelectList={(id) => setSelectedListId(id)}
@@ -71,7 +81,7 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
           </ScrollArea>
         )}
         <BaseModal.Actions>
-          <Button variant='default' disabled={!!selectedListId || isBulkInserting}>
+          <Button variant='default' disabled={selectedListId === null || isBulkInserting}>
             {isBulkInserting && <Spinner />}
             Bekræft
           </Button>

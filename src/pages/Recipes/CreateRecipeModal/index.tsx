@@ -58,7 +58,10 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
       <form onSubmit={handleCreateRecipe}>
         <Input
           label='Opskrift navn'
+          autoComplete='name'
+          id='name'
           name='name'
+          autoFocus
           type='text'
           placeholder='Burger'
           value={formData.name}
@@ -66,21 +69,24 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
         />
         <Input
           label='Link'
+          id='link'
           name='link'
           type='text'
           placeholder='Link'
           value={formData.link}
           onChange={handleFormChange}
         />
-        <input
-          className='mr-1.5'
-          type='checkbox'
-          id='redirectOnSuccess'
-          name='redirectOnSuccess'
-          checked={formData.redirectOnSuccess}
-          onChange={handleFormChange}
-        />
-        <label htmlFor='redirectOnSuccess'>Åben nyoprettede liste?</label>
+        <div className='flex items-center'>
+          <input
+            className='m-2 w-4 h-4 text-white accent-orange-600 rounded-xs'
+            type='checkbox'
+            id='redirectOnSuccess'
+            name='redirectOnSuccess'
+            checked={formData.redirectOnSuccess}
+            onChange={handleFormChange}
+          />
+          <label htmlFor='redirectOnSuccess'>Åben opskrift</label>
+        </div>
         <BaseModal.Actions>
           <Button disabled={isCreatingRecipe}>
             {isCreatingRecipe && <Spinner />}

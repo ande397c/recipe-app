@@ -6,7 +6,7 @@ import { ReassignSelect } from '@/pages/GroceryListDetails/GroceryDetailsModal/C
 import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchIngredients } from '@/services/ingredients/useFetchIngredients';
-import { FC, FormEvent, useState } from 'react';
+import { CSSProperties, FC, FormEvent, useMemo, useState } from 'react';
 
 interface CopyIngrediensModalProps {
   recipeId?: number | undefined;
@@ -16,10 +16,20 @@ interface CopyIngrediensModalProps {
 export const CopyIngrediensModal: FC<CopyIngrediensModalProps> = ({ recipeId, onClose }) => {
   const { data: groceryLists, isLoading: isLoadingLists } = useFetchGroceryLists();
   const { data: ingredients, isLoading: isLoadingIngredients } = useFetchIngredients(recipeId);
-  const { mutate: bulkInsertGroceryItems } = useBulkInsertGroceryItems();
+  const { mutate: bulkInsertGroceryItems, isPending: isBulkInserting } =
+    useBulkInsertGroceryItems();
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
 
   const pageIsLoading = isLoadingLists || isLoadingIngredients;
+
+  const computedHeightStyles: CSSProperties = useMemo(
+    () => ({
+      height: String((groceryLists?.length ?? 0) * 3) + 'rem',
+      minHeight: '5rem',
+      maxHeight: '15rem'
+    }),
+    [groceryLists]
+  );
 
   const addContentToList = (e: FormEvent) => {
     e.preventDefault();
@@ -32,7 +42,7 @@ export const CopyIngrediensModal: FC<CopyIngrediensModalProps> = ({ recipeId, on
         grocery_item: item.ingredient_name,
         list_id: selectedListId
       })) || [];
-    console.log(bulkInput);
+
     bulkInsertGroceryItems(
       { bulkInput },
       {
@@ -55,7 +65,7 @@ export const CopyIngrediensModal: FC<CopyIngrediensModalProps> = ({ recipeId, on
             <Skeleton shape='rect' height='4rem' />
           </div>
         ) : (
-          <ScrollArea className='h-60'>
+          <ScrollArea style={computedHeightStyles}>
             <ReassignSelect
               availableLists={groceryLists}
               onSelectList={(id) => setSelectedListId(id)}
@@ -64,7 +74,7 @@ export const CopyIngrediensModal: FC<CopyIngrediensModalProps> = ({ recipeId, on
           </ScrollArea>
         )}
         <BaseModal.Actions>
-          <Button variant='default' disabled={selectedListId === null}>
+          <Button variant='default' disabled={selectedListId === null || isBulkInserting}>
             Bekræft
           </Button>
         </BaseModal.Actions>

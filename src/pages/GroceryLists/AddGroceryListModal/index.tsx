@@ -39,19 +39,24 @@ export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, o
       <form onSubmit={handleCreateGroceryList}>
         <Input
           label='Indkøbsliste navn'
+          name='name'
+          id='name'
+          autoFocus
           type='text'
           placeholder='Basis vare'
           onChange={(e) => setGroceryListName(e.target.value)}
         />
-        <input
-          className='mr-1.5'
-          type='checkbox'
-          id='redirectOnSuccess'
-          name='redirectOnSuccess'
-          checked={redirectOnSuccess}
-          onChange={() => setRedirectOnSuccess((prev) => !prev)}
-        />
-        <label htmlFor='redirectOnSuccess'>Åben nyoprettede liste?</label>
+        <div className='flex items-center'>
+          <input
+            className='mr-1.5 w-4 h-4 text-white accent-orange-600 rounded-xs'
+            type='checkbox'
+            id='redirectOnSuccess'
+            name='redirectOnSuccess'
+            checked={redirectOnSuccess}
+            onChange={() => setRedirectOnSuccess((prev) => !prev)}
+          />
+          <label htmlFor='redirectOnSuccess'>Åben indkøbsliste</label>
+        </div>
         <BaseModal.Actions>
           <Button disabled={isCreatingGroceryList}>
             {isCreatingGroceryList && <Spinner />}
