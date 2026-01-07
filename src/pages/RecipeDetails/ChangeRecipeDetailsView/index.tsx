@@ -12,11 +12,21 @@ export const ChangeRecipeDetailsView: FC<ChangeRecipeDetailsViewProps> = ({
   onChangeView
 }) => {
   return (
-    <ButtonGroup>
-      <Button variant={isStepView ? 'outline' : 'ghost'} onClick={onChangeView} value='steps'>
+    <ButtonGroup className='w-full grid-cols-2'>
+      <Button
+        className='w-full'
+        variant={isStepView ? 'outline' : 'ghost'}
+        onClick={onChangeView}
+        value='steps'
+      >
         Fremgangsmåde
       </Button>
-      <Button variant={!isStepView ? 'outline' : 'ghost'} onClick={onChangeView} value='ingredients'>
+      <Button
+        className='w-full'
+        variant={!isStepView ? 'outline' : 'ghost'}
+        onClick={onChangeView}
+        value='ingredients'
+      >
         Ingredienser
       </Button>
     </ButtonGroup>

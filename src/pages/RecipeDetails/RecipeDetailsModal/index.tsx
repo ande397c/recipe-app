@@ -1,12 +1,12 @@
 import { FC } from 'react';
-import { RenameRecipeModal } from './RenameRecipeModal';
+import { EditRecipeModal } from './EditRecipeModal';
 import { DeleteRecipeModal } from './DeleteRecipeModal';
 import { CopyIngrediensModal } from './CopyIngrediensModal';
 
 
 type RenameRecipeModal = {
   recipeId: number | undefined;
-  type: 'rename';
+  type: 'edit';
 };
 
 type CopyIngredientsModal = {
@@ -27,8 +27,8 @@ export const RecipeyDetailsModals: FC<RecipeyDetailsModalsProps & { onClose: () 
   switch (props.type) {
     case 'copyIngredients':
       return <CopyIngrediensModal {...props} />;
-    case 'rename':
-      return <RenameRecipeModal {...props} />;
+    case 'edit':
+      return <EditRecipeModal {...props} />;
     case 'delete':
       return <DeleteRecipeModal {...props} />;
     default:

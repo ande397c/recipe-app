@@ -1,3 +1,4 @@
+import { Category } from "./category";
 import { IngredientItem } from "./ingredientItem";
 import { RecipeStep } from "./recipeStep";
 
@@ -9,4 +10,5 @@ export interface RecipeItem {
   img_url: string;
   ingredients: IngredientItem[];
   recipe_steps: RecipeStep[];
+  categories: Category[]
 }

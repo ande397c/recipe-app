@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faAngleLeft,
   faAngleRight,
   faArrowUpRightFromSquare,
   faEdit,
@@ -20,7 +21,12 @@ import { RecipeDetailsIngredients } from './RecipeDetailsIngredients';
 import { ChangeRecipeDetailsView } from './ChangeRecipeDetailsView';
 import { RecipeDetailsView } from '@/constants';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { RecipeDetailsLayout } from '@/components/RecipeDetailsLayout';
+import { IconButton } from '@/components/IconButton';
 
+interface RecipeTopUiProps {
+  menuItems: MenuItem[];
+}
 export const RecipeDetail: FC = () => {
   const { id } = useParams();
   const { setItem, getItem } = useLocalStorage('recipeDetailsView');
@@ -48,7 +54,7 @@ export const RecipeDetail: FC = () => {
     },
     {
       label: 'Rediger opskrift',
-      onClick: () => setRecipeDetailsModal({ type: 'rename', recipeId: Number(id) }),
+      onClick: () => setRecipeDetailsModal({ type: 'edit', recipeId: Number(id) }),
       icon: faEdit
     },
     {
@@ -74,17 +80,16 @@ export const RecipeDetail: FC = () => {
   }
 
   return (
-    <MainLayout title={recipe?.recipe_name} displayBackButton>
+    <RecipeDetailsLayout
+      title={recipe?.recipe_name}
+      backgroundImg={recipe?.img_url}
+      action={<RecipeTopUi menuItems={menuItems} />}
+    >
       {recipeDetailsModal && (
         <RecipeyDetailsModals {...recipeDetailsModal} onClose={handleCloseModal} />
       )}
-      <div
-        className={clsx('flex items-center ', {
-          'justify-end': !recipe?.img_url,
-          'justify-between': recipe?.img_url
-        })}
-      >
-        {recipe?.img_url && (
+      <div className={clsx('flex items-center justify-between')}>
+        {recipe?.recipe_url && (
           <Item variant='outline' asChild className='p-2'>
             <a href={recipe?.recipe_url} target='_blank' rel='noopener noreferrer'>
               <ItemContent>
@@ -96,19 +101,30 @@ export const RecipeDetail: FC = () => {
             </a>
           </Item>
         )}
-        <DropdownMenu menuItems={menuItems}>
-          <FontAwesomeIcon icon={faEllipsis} />
-        </DropdownMenu>
+        {(recipe?.categories ?? []).length > 0 &&
+          recipe?.categories.map((category) => (
+            <div className='w-fit px-2 rounded-2xl text-orange-600 border border-orange-600'>
+              {category.category_name}
+            </div>
+          ))}
       </div>
-      {recipe?.img_url && (
-        <img src={recipe?.img_url} alt={recipe?.recipe_name} className='max-w-[20rem] rounded-sm' />
-      )}
       <ChangeRecipeDetailsView isStepView={isStepView} onChangeView={handleViewChange} />
       {isStepView ? (
         <RecipeDetailsSteps steps={recipe?.recipe_steps ?? []} recipeId={Number(id)} />
       ) : (
         <RecipeDetailsIngredients ingredients={recipe?.ingredients ?? []} recipeId={Number(id)} />
       )}
-    </MainLayout>
+    </RecipeDetailsLayout>
+  );
+};
+
+const RecipeTopUi: FC<RecipeTopUiProps> = ({ menuItems }) => {
+  return (
+    <div className='flex items-center justify-between'>
+      <IconButton icon={faAngleLeft} onClick={() => window.history.back()} />
+      <DropdownMenu menuItems={menuItems}>
+        <IconButton icon={faEllipsis} />
+      </DropdownMenu>
+    </div>
   );
 };

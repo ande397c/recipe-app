@@ -1,17 +1,15 @@
 import { MobileNavBar } from '@/components/MobileNavBar';
-import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface MainLayoutProps {
+export interface MainLayoutProps {
   title?: string;
-  displayBackButton?: boolean;
+  action?: React.ReactNode;
   spacing?: number;
   children: React.ReactNode;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({
   title,
-  displayBackButton,
+  action,
   spacing = 0,
   children
 }) => {
@@ -19,11 +17,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
     <main>
       <title>{title}</title>
       <div className={`flex flex-col gap-${spacing} gap-2 p-4`}>
-        {displayBackButton && (
-          <button className='self-baseline p-4' onClick={() => window.history.back()}>
-            <FontAwesomeIcon icon={faAngleLeft} />
-          </button>
-        )}
+        {action}
         {title && <h1 className='text-2xl font-bold'>{title}</h1>}
         {children}
       </div>

@@ -1,10 +1,8 @@
-// import { useRef } from 'react'
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import clsx from 'clsx';
 import { useRef } from 'react';
-// import { useOutsideClick } from '@hooks/useOutsideClick'
 
 interface BaseModalProps {
   showModal: boolean;
@@ -63,7 +61,7 @@ interface BaseModalActionsProps {
 }
 
 const Actions = ({ children }: BaseModalActionsProps) => {
-  return <div className='flex justify-center flex-col sm:flex-row gap-2 mt-6'>{children}</div>;
+  return <div className='flex items-center gap-2 mt-6'>{children}</div>;
 };
 
 BaseModal.Actions = Actions;

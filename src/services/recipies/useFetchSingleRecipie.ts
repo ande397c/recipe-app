@@ -20,6 +20,10 @@ const fetchSingleRecipe = async (id: number | undefined): Promise<RecipeItem> =>
       id,
       instruction, 
       is_completed
+    ),
+    categories (
+    id,
+    category_name
     )
   `
     )

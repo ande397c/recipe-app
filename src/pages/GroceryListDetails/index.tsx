@@ -12,6 +12,8 @@ import { GroceryListOperations } from './GroceryListOperations';
 import { GroceryDetailsModals, GroceryDetailsModalsProps } from './GroceryDetailsModal';
 import { Skeleton } from '@/components/Skeleton';
 import { GroceryItem as GroceryItemInterface } from '@/interfaces/groceryItem';
+import { IconButton } from '@/components/IconButton';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 const sortedItens = (items: GroceryItemInterface[] | undefined) => {
   if (!items) {
@@ -80,7 +82,10 @@ export const GroceryListDetails = () => {
   }
 
   return (
-    <MainLayout title={singleGroceryList?.list_name} displayBackButton>
+    <MainLayout
+      title={singleGroceryList?.list_name}
+      action={<IconButton icon={faAngleLeft} onClick={() => window.history.back()} />}
+    >
       {groceryDetailsModal && (
         <GroceryDetailsModals onClose={handleCloseModal} {...groceryDetailsModal} />
       )}
@@ -91,7 +96,9 @@ export const GroceryListDetails = () => {
         onDisplayMoveContentModal={() =>
           setGroceryDetailsModal({ type: 'copyContent', listId: Number(id) })
         }
-        onDisplayDeleteListModal={() => setGroceryDetailsModal({ type: 'delete', listId: Number(id) })}
+        onDisplayDeleteListModal={() =>
+          setGroceryDetailsModal({ type: 'delete', listId: Number(id) })
+        }
       />
       <form onSubmit={handleCreateItem}>
         <input

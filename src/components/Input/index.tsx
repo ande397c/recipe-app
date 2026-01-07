@@ -7,7 +7,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = ({ label, error, ...inputProps }: InputProps) => {
   return (
-    <>
+    <div>
       {label && (
         <label className='block' htmlFor={inputProps.name}>
           {label}
@@ -21,6 +21,6 @@ export const Input = ({ label, error, ...inputProps }: InputProps) => {
         })}
       />
       {error && <span className='text-danger text-sm'>{error}</span>}
-    </>
+    </div>
   );
 };
