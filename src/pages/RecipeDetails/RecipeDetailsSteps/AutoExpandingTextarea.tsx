@@ -44,7 +44,7 @@ export const AutoExpandingTextarea: FC<AutoExpandingTextareaProps> = ({ onCreate
       <textarea
         ref={textareaRef}
         name='createStep'
-        className='w-full resize-none overflow-hidden bg-white border border-muted text-heading text-sm rounded-md focus:ring-brand focus:border-brand block p-3.5 shadow-sm'
+        className='w-full resize-none overflow-hidden bg-white border border-muted text-sm rounded-md focus:ring-brand focus:border-brand block p-3.5 shadow-sm'
         rows={1}
         value={value}
         placeholder='Tilføj step'

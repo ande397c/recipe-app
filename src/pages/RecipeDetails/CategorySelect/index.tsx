@@ -39,7 +39,7 @@ export const CategorySelect: FC<CategorySelectProps> = ({
           ))}
           <SelectSeparator />
           <SelectActionItem onSelect={onActionClick} className='text-primary font-medium'>
-            + Tilføj categori
+            + Tilføj kategori
           </SelectActionItem>
         </SelectContent>
       </Select>

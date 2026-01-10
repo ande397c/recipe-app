@@ -1,4 +1,3 @@
-
 import { MainLayout } from '@/components/MainLayout';
 import { RecipeCard } from '@/components/RecipeCard';
 import { Skeleton } from '@/components/Skeleton';
@@ -6,14 +5,17 @@ import { ViewButtons } from '@/components/ViewButtons';
 import { View } from '@/constants';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { AddGroceryListModal } from './AddGroceryListModal';
+import { Input } from '@/components/Input';
 
 export const GroceryLists = () => {
   const { data: groceryLists, isLoading } = useFetchGroceryLists();
   const { setItem, getItem } = useLocalStorage('view');
   const [displayModal, setDisplayModal] = useState(false);
+  const [searchVal, setSearchVal] = useState('');
   const [view, setView] = useState<View>(getItem() ?? 'grid');
+
   const isDenseView = view === 'list';
 
   const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -22,6 +24,20 @@ export const GroceryLists = () => {
     setItem(viewValue);
   };
 
+  const filteredGroceryLists = useMemo(() => {
+    if (!groceryLists) {
+      return [];
+    }
+
+    return groceryLists.filter((list) => {
+      const matchesSearch =
+        searchVal.trim() === ''
+          ? true
+          : list.list_name.toLowerCase().includes(searchVal.toLowerCase());
+
+      return matchesSearch;
+    });
+  }, [groceryLists, searchVal]);
 
   if (isLoading) {
     return (
@@ -41,14 +57,23 @@ export const GroceryLists = () => {
     <MainLayout title='Indkøbslister' spacing={4}>
       {displayModal && <AddGroceryListModal showModal onClose={() => setDisplayModal(false)} />}
       <ViewButtons isDenseView={isDenseView} onChangeView={handleViewChange} />
+      <Input
+        value={searchVal}
+        onChange={(e) => setSearchVal(e.target.value)}
+        placeholder='Søg...'
+        name='search'
+        id='search'
+      />
       <ul className='grid grid-cols-2 gap-4 mb-12'>
-        <RecipeCard
-          variant='add'
-          title='Tilføj'
-          isDense={isDenseView}
-          onClick={() => setDisplayModal((prev) => !prev)}
-        />
-        {groceryLists?.map((groceryList) => (
+        {searchVal.length === 0 && (
+          <RecipeCard
+            variant='add'
+            title='Tilføj'
+            isDense={isDenseView}
+            onClick={() => setDisplayModal((prev) => !prev)}
+          />
+        )}
+        {filteredGroceryLists?.map((groceryList) => (
           <RecipeCard
             key={groceryList.id}
             isDense={isDenseView}

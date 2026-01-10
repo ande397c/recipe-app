@@ -55,15 +55,15 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
 
   return (
     <BaseModal showModal={displayModal} title='Opret ny opskrift' size='sm' onClose={onClose}>
-      <form onSubmit={handleCreateRecipe}>
+      <form onSubmit={handleCreateRecipe} className='flex flex-col gap-2'>
         <Input
-          label='Opskrift navn'
+          label='Navn'
           autoComplete='name'
           id='name'
           name='name'
           autoFocus
           type='text'
-          placeholder='Burger'
+          placeholder='Koteletter i sticky sauce'
           value={formData.name}
           onChange={handleFormChange}
         />
@@ -72,7 +72,7 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
           id='link'
           name='link'
           type='text'
-          placeholder='Link'
+          placeholder='https://madensverden.dk/koteletter-i-sticky-sauce/'
           value={formData.link}
           onChange={handleFormChange}
         />

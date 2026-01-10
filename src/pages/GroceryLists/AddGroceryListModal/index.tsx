@@ -36,14 +36,14 @@ export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, o
 
   return (
     <BaseModal showModal={showModal} title='Opret ny indkøbsliste' size='sm' onClose={onClose}>
-      <form onSubmit={handleCreateGroceryList}>
+      <form onSubmit={handleCreateGroceryList} className='flex flex-col gap-2'>
         <Input
-          label='Indkøbsliste navn'
+          label='Navn'
           name='name'
           id='name'
           autoFocus
           type='text'
-          placeholder='Basis vare'
+          placeholder='basisvarer'
           onChange={(e) => setGroceryListName(e.target.value)}
         />
         <div className='flex items-center'>

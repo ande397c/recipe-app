@@ -91,7 +91,7 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
               defaultValue={formData.categoryId}
               categories={categories ?? []}
               onValueChange={handleFormChange}
-              onActionClick={() => setShowCategoryModal((prev) => !prev)}
+              onActionClick={() => setShowCategoryModal(true)}
             />
             <Input
               label='Link'

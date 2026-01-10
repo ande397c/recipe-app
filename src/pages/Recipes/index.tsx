@@ -4,17 +4,45 @@ import { Skeleton } from '@/components/Skeleton';
 import { GridListSkeleton } from '@/pages/GroceryLists';
 import { useFetchRecipies } from '@/services/recipies/useFetchRecipies';
 import { CreateRecipeModal } from './CreateRecipeModal';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ViewButtons } from '@/components/ViewButtons';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { View } from '@/constants';
+import { Input } from '@/components/Input';
+import { CategoryFilterSelect } from './RecipeFilterSelect';
+import { useFetchCategories } from '@/services/categories/useFetchCategories';
 
 export const Recipes = () => {
   const { data: recipies, isLoading } = useFetchRecipies();
+  const { data: categories } = useFetchCategories();
   const { setItem, getItem } = useLocalStorage('view');
   const [displayModal, setDisplayModal] = useState(false);
+  const [searchVal, setSearchVal] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [view, setView] = useState<View>(getItem() ?? 'grid');
+
   const isDenseView = view === 'list';
+
+  const filteredRecipies = useMemo(() => {
+    if (!recipies) {
+      return [];
+    }
+
+    return recipies.filter((recipe) => {
+      const matchesCategory =
+        selectedCategory === 'all'
+          ? true
+          : (recipe.categories?.some((category) => String(category.id) === selectedCategory) ??
+            false);
+
+      const matchesSearch =
+        searchVal.trim() === ''
+          ? true
+          : recipe.recipe_name.toLowerCase().includes(searchVal.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [recipies, selectedCategory, searchVal]);
 
   const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const viewValue = e.currentTarget.value as View;
@@ -38,17 +66,33 @@ export const Recipes = () => {
 
   return (
     <MainLayout title='Opskrifter' spacing={4}>
-      {/* todo: Container comp? */}
       {displayModal && <CreateRecipeModal displayModal onClose={() => setDisplayModal(false)} />}
       <ViewButtons isDenseView={isDenseView} onChangeView={handleViewChange} />
-      <ul className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-12'>
-        <RecipeCard
-          variant='add'
-          title='Tilføj'
-          isDense={isDenseView}
-          onClick={() => setDisplayModal(true)}
+      <div className='flex items-center justify-between gap-2 flex-wrap'>
+        <CategoryFilterSelect
+          categories={categories ?? []}
+          defaultValue='all'
+          onValueChange={(category) => setSelectedCategory(category)}
         />
-        {recipies?.map((recipe) => (
+        <Input
+          value={searchVal}
+          onChange={(e) => setSearchVal(e.target.value)}
+          placeholder='Søg...'
+          name='search'
+          id='search'
+        />
+      </div>
+      <ul className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-12'>
+        {searchVal.length === 0 ||
+          (selectedCategory !== 'all' && (
+            <RecipeCard
+              variant='add'
+              title='Tilføj'
+              isDense={isDenseView}
+              onClick={() => setDisplayModal(true)}
+            />
+          ))}
+        {filteredRecipies?.map((recipe) => (
           <RecipeCard
             key={recipe.id}
             isDense={isDenseView}

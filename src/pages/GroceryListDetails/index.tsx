@@ -14,6 +14,7 @@ import { Skeleton } from '@/components/Skeleton';
 import { GroceryItem as GroceryItemInterface } from '@/interfaces/groceryItem';
 import { IconButton } from '@/components/IconButton';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { Input } from '@/components/Input';
 
 const sortedItens = (items: GroceryItemInterface[] | undefined) => {
   if (!items) {
@@ -101,12 +102,13 @@ export const GroceryListDetails = () => {
         }
       />
       <form onSubmit={handleCreateItem}>
-        <input
+        <Input
           name='createGroceryItem'
           className='w-full'
           value={newItem}
           type='text'
-          placeholder='Tilføj indkøb'
+          placeholder='Bananer'
+          label='Tilføj indkøb'
           onChange={(e) => setNewItem(e.target.value)}
           onBlur={handleCreateItem}
         />
