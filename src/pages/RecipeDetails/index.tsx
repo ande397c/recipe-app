@@ -37,7 +37,7 @@ export const RecipeDetail: FC = () => {
   const [recipeDetailsModal, setRecipeDetailsModal] = useState<RecipeyDetailsModalsProps | null>(
     null
   );
-
+  console.log('RECIPE::', recipe);
   const isStepView = recipeDetailsView === 'steps';
 
   const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -68,7 +68,7 @@ export const RecipeDetail: FC = () => {
   const handleCloseModal = () => {
     setRecipeDetailsModal(null);
   };
-
+  console.log(recipe)
   if (isLoading) {
     return (
       <MainLayout spacing={4}>
@@ -84,6 +84,14 @@ export const RecipeDetail: FC = () => {
       title={recipe?.recipe_name}
       backgroundImg={recipe?.img_url}
       action={<RecipeTopUi menuItems={menuItems} />}
+      meta={
+        (recipe?.categories ?? []).length > 0 &&
+        recipe?.categories?.map((cat) => (
+          <div className='w-fit p-1 px-2 rounded-2xl text-orange-600 border border-orange-600 text-xs'>
+            {cat.category_name}
+          </div>
+        ))
+      }
     >
       {recipeDetailsModal && (
         <RecipeyDetailsModals {...recipeDetailsModal} onClose={handleCloseModal} />
@@ -101,12 +109,6 @@ export const RecipeDetail: FC = () => {
             </a>
           </Item>
         )}
-        {(recipe?.categories ?? []).length > 0 &&
-          recipe?.categories.map((category) => (
-            <div className='w-fit px-2 rounded-2xl text-orange-600 border border-orange-600'>
-              {category.category_name}
-            </div>
-          ))}
       </div>
       <ChangeRecipeDetailsView isStepView={isStepView} onChangeView={handleViewChange} />
       {isStepView ? (

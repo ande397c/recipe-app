@@ -6,9 +6,9 @@ export interface RecipeItem {
   id: number;
   created_at?: string;
   recipe_name: string;
-  recipe_url: string;
-  img_url: string;
+  recipe_url: string | null;
+  img_url?: string;
   ingredients: IngredientItem[];
   recipe_steps: RecipeStep[];
-  categories: Category[]
+  categories: Category[] | null;
 }

@@ -21,7 +21,6 @@ export const ViewButtons: FC<ViewButtonsProps> = ({ isDenseView, onChangeView })
         <FontAwesomeIcon
           size='lg'
           icon={faBars}
-          className={`${isDenseView ? 'text-amber-600' : ''}`}
         />
       </Button>
       <Button
@@ -33,7 +32,6 @@ export const ViewButtons: FC<ViewButtonsProps> = ({ isDenseView, onChangeView })
         <FontAwesomeIcon
           size='lg'
           icon={faGrip}
-          className={`${!isDenseView ? 'text-amber-600' : ''}`}
         />
       </Button>
     </ButtonGroup>

@@ -18,7 +18,7 @@ export const SelectActionItem = forwardRef<
         tabIndex={0}
         onClick={onSelect}
         className={cn(
-          'flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 px-2 text-sm',
+          'flex w-full cursor-pointer select-none items-center py-1.5 px-2 text-sm',
           'hover:bg-accent hover:text-accent-foreground',
           'focus:bg-accent focus:text-accent-foreground',
           className

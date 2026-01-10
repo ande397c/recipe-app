@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState } from 'react';
+import { FC } from 'react';
 import {
   CreateRecipeStepInput,
   useCreateRecipeStep
@@ -6,6 +6,7 @@ import {
 import { useUpdateRecipeStep } from '@/services/recipeSteps/useUpdateRecipeStep';
 import { RecipeStep } from '@/interfaces/recipeStep';
 import clsx from 'clsx';
+import { AutoExpandingTextarea } from './AutoExpandingTextarea';
 
 interface RecipeDetailsStepsProps {
   recipeId: number;
@@ -15,10 +16,8 @@ interface RecipeDetailsStepsProps {
 export const RecipeDetailsSteps: FC<RecipeDetailsStepsProps> = ({ steps, recipeId }) => {
   const { mutate: createRecipeStep } = useCreateRecipeStep();
   const { mutate: updateRecipeStep } = useUpdateRecipeStep();
-  const [newStep, setNewStep] = useState('');
 
-  const handleCreateStep = (e: FormEvent) => {
-    e.preventDefault();
+  const handleCreateStep = (newStep: string) => {
     const instruction = newStep.trim();
     if (!instruction) return;
 
@@ -28,9 +27,6 @@ export const RecipeDetailsSteps: FC<RecipeDetailsStepsProps> = ({ steps, recipeI
     };
 
     createRecipeStep(payload, {
-      onSuccess: () => {
-        setNewStep('');
-      },
       onError: (error) => {
         console.error('Error creating recipe step:', error);
       }
@@ -47,18 +43,7 @@ export const RecipeDetailsSteps: FC<RecipeDetailsStepsProps> = ({ steps, recipeI
   return (
     <>
       <h2 className='text-lg font-semibold'>Fremgangsmåde</h2>
-      <form onSubmit={handleCreateStep}>
-        <textarea
-          name='createStep'
-          className='w-full'
-          rows={3}
-          value={newStep}
-          placeholder='Tilføj step'
-          onChange={(e) => setNewStep(e.target.value)}
-          onBlur={handleCreateStep}
-        />
-        <button className='hidden'>Tilføj</button>
-      </form>
+      <AutoExpandingTextarea onCreateStep={handleCreateStep} />
       <ol className='list-decimal pl-4 cursor-pointer'>
         {steps.map((step) => (
           <li

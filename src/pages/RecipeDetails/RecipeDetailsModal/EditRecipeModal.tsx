@@ -6,16 +6,9 @@ import { useFetchSingleRecipe } from '@/services/recipies/useFetchSingleRecipie'
 import { Skeleton } from '@/components/Skeleton';
 import { Button } from '@/components/shadcn/button';
 import { Spinner } from '@/components/shadcn/spinner';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue
-} from '@/components/shadcn/select';
-import { SelectActionItem } from '@/components/shadcn/x';
 import { useFetchCategories } from '@/services/categories/useFetchCategories';
+import { CategorySelect } from '../CategorySelect';
+import { CreateCategoryModal } from '../CreateCategoryModal';
 
 interface EditRecipeModalProps {
   recipeId: number | undefined;
@@ -28,25 +21,28 @@ interface FormData {
   link: string;
 }
 
+export type EditRecipeFormKeys = keyof FormData;
+
 export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose }) => {
   const { mutate: updateRecipe, isPending: isUpdatingRecipe } = useUpdateRecipe();
   const { data: recipe, isLoading: isRecipeLoading } = useFetchSingleRecipe(recipeId);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
   const { data: categories } = useFetchCategories();
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    categoryId: '',
-    link: ''
+    name: recipe?.recipe_name ?? '',
+    categoryId: String(recipe?.categories?.[0]?.id ?? ''),
+    link: recipe?.recipe_url ?? ''
   });
-  console.log(categories);
-  const handleFormChange = <K extends keyof FormData>(field: K, value: FormData[K]) => {
+  console.log(showCategoryModal);
+
+  const handleFormChange = (field: EditRecipeFormKeys, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleRenameGroceryList = (e: React.FormEvent) => {
-    console.log('handleRenameGroceryList');
+  const handleUpdateRecipe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!recipeId) {
       return;
@@ -54,6 +50,7 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
     const payload: UpdateRecipeInput = {
       id: recipeId,
       recipe_name: formData.name,
+      category_id: parseInt(formData.categoryId),
       recipe_url: formData.link
     };
 
@@ -75,43 +72,26 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
       enableClickOutside={false}
       onClose={onClose}
     >
-      <form onSubmit={handleRenameGroceryList}>
+      {showCategoryModal && <CreateCategoryModal onClose={() => setShowCategoryModal(false)} />}
+      <form onSubmit={handleUpdateRecipe}>
         {isRecipeLoading ? (
           <Skeleton shape='square' width='20%' />
         ) : (
           <div className='flex flex-col gap-3'>
-            <Select
-              defaultValue={String(recipe?.categories[0].id)}
-              onValueChange={(category) => handleFormChange('categoryId', category)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder='Vælg categori' />
-              </SelectTrigger>
-
-              <SelectContent className='max-h-60'>
-                {categories?.map((category) => (
-                  <SelectItem key={category.id} value={String(category.id)}>
-                    {category.category_name}
-                  </SelectItem>
-                ))}
-                <SelectSeparator />
-                <SelectActionItem
-                  onSelect={() => console.log('Create new item')}
-                  className='text-primary font-medium'
-                >
-                  + Tilføj categori
-                </SelectActionItem>
-              </SelectContent>
-            </Select>
-
             <Input
               label='Opskrift navn'
               name='name'
               id='name'
               type='text'
               placeholder='Burger'
-              defaultValue={recipe?.recipe_name}
+              value={formData.name}
               onChange={(e) => handleFormChange('name', e.target.value)}
+            />
+            <CategorySelect
+              defaultValue={formData.categoryId}
+              categories={categories ?? []}
+              onValueChange={handleFormChange}
+              onActionClick={() => setShowCategoryModal((prev) => !prev)}
             />
             <Input
               label='Link'
@@ -119,7 +99,7 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
               id='link'
               type='text'
               placeholder='Link'
-              defaultValue={recipe?.recipe_url}
+              value={formData.link}
               onChange={(e) => handleFormChange('link', e.target.value)}
             />
           </div>
