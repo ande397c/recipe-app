@@ -104,7 +104,6 @@ export const GroceryListDetails = () => {
       <form onSubmit={handleCreateItem}>
         <Input
           name='createGroceryItem'
-          className='w-full'
           value={newItem}
           type='text'
           placeholder='Bananer'

@@ -26,7 +26,7 @@ export const CategoryFilterSelect: FC<CategoryFilterSelectProps> = ({
         defaultValue={defaultValue}
         onValueChange={(category) => onValueChange(category)}
       >
-        <SelectTrigger id='categorySelect' className='min-w-40'>
+        <SelectTrigger id='categorySelect' className='min-w-40 max-h-8'>
           <SelectValue placeholder='Vælg categori' />
         </SelectTrigger>
 

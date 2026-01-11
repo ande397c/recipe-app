@@ -25,10 +25,10 @@ export const GroceryListOperations = ({
   onDisplayMoveContentModal,
   onDisplayDeleteListModal
 }: GroceryListOperationsProps) => {
-  
   const { mutate: bulkUpdateGroceryItems } = useBulkUpdateGroceryItems();
   const { mutate: bulkDeleteGroceryItems } = useBulkDeleteGroceryItems();
-  
+
+  const listIsEmpty = listItems.length === 0;
 
   const handleDeleteAll = () => {
     if (!listItems || listItems.length === 0) {
@@ -68,10 +68,15 @@ export const GroceryListOperations = ({
   };
 
   const menuItems: MenuItem[] = [
-    { label: 'Kopier indhold', onClick: onDisplayMoveContentModal, icon: faAngleRight },
-    { label: 'Check alle', onClick: handleCheckAll, icon: faCheck },
+    {
+      label: 'Kopier indhold',
+      isDisabled: listIsEmpty,
+      onClick: onDisplayMoveContentModal,
+      icon: faAngleRight
+    },
+    { label: 'Check alle', isDisabled: listIsEmpty, onClick: handleCheckAll, icon: faCheck },
     { label: 'Omdøb liste', onClick: onDisplayRenameModal, icon: faEdit },
-    { label: 'Clear liste', onClick: handleDeleteAll, icon: faX },
+    { label: 'Clear liste', isDisabled: listIsEmpty, onClick: handleDeleteAll, icon: faX },
     { label: 'Slet liste', onClick: onDisplayDeleteListModal, icon: faTrashAlt, color: 'danger' }
   ];
 

@@ -1,17 +1,18 @@
 import { NavLink } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faList, faUtensils } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays, faList, faUtensils } from '@fortawesome/free-solid-svg-icons';
 import { clsx } from 'clsx';
 
 export const MobileNavBar: React.FC = () => {
   const menuItems = [
     { icon: faList, href: '/grocery-lists', label: 'Indkøbslister' },
-    { icon: faUtensils, href: '/recipes', label: 'Opskrifter' }
+    { icon: faUtensils, href: '/recipes', label: 'Opskrifter' },
+    { icon: faCalendarDays, href: '/meal-plan', label: 'Madplan' }
   ];
 
   return (
     <nav className='fixed bottom-0 w-full bg-neutral-800 border p-2.5'>
-      <ul className='flex justify-around'>
+      <ul className='flex justify-evenly gap-4'>
         {menuItems.map((item) => (
           <NavLink
             key={item.href}

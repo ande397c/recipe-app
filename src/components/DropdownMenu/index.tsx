@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 
 export interface MenuItem {
   label: string;
+  isDisabled?: boolean;
   icon: IconDefinition;
   color?: 'current' | 'danger';
   onClick: () => void;
@@ -40,9 +41,11 @@ export const DropdownMenu = ({ menuItems, children }: DropdownMenuProps) => {
               <li
                 key={index}
                 className={clsx({
-                  'px-4 py-2 hover:bg-gray-100 cursor-pointer': true,
+                  'px-4 py-2': true,
                   'text-red-500': item.color === 'danger',
-                  'text-black': item.color === 'current' || !item.color
+                  'text-black': item.color === 'current' || !item.color,
+                  'text-gray-300 cursor-not-allowed ': item.isDisabled,
+                  'hover:bg-gray-100 cursor-pointer': !item.isDisabled
                 })}
                 onClick={() => handleItemClick(item)}
               >

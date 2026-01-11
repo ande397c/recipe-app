@@ -3,11 +3,16 @@ import { Recipes } from '@/pages/Recipes';
 import { RecipeDetail } from '@/pages/RecipeDetails';
 import { GroceryListDetails } from '@/pages/GroceryListDetails';
 import { GroceryLists } from '@/pages/GroceryLists';
+import { MealPlan } from './pages/MealPlan';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to='/recipes' replace />
+  },
+  {
+    path: '/meal-plan',
+    element: <MealPlan />
   },
   {
     path: '/recipes',

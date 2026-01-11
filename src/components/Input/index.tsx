@@ -5,9 +5,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export const Input = ({ label, error, ...inputProps }: InputProps) => {
+export const Input = ({ label, error, className, ...inputProps }: InputProps) => {
   return (
-    <div className='max-h-9'>
+    <div>
       {label && (
         <label className='block text-sm' htmlFor={inputProps.name}>
           {label}
@@ -20,7 +20,8 @@ export const Input = ({ label, error, ...inputProps }: InputProps) => {
           {
             'text-logoColor': !error,
             'border-1 border-danger text-danger': error
-          }
+          },
+          className
         )}
       />
       {error && <span className='text-danger text-sm'>{error}</span>}

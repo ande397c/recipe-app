@@ -23,6 +23,7 @@ import { RecipeDetailsView } from '@/constants';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { RecipeDetailsLayout } from '@/components/RecipeDetailsLayout';
 import { IconButton } from '@/components/IconButton';
+import { Pill } from '@/components/Pill';
 
 interface RecipeTopUiProps {
   menuItems: MenuItem[];
@@ -37,7 +38,6 @@ export const RecipeDetail: FC = () => {
   const [recipeDetailsModal, setRecipeDetailsModal] = useState<RecipeyDetailsModalsProps | null>(
     null
   );
-  console.log('RECIPE::', recipe);
   const isStepView = recipeDetailsView === 'steps';
 
   const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,6 +49,7 @@ export const RecipeDetail: FC = () => {
   const menuItems: MenuItem[] = [
     {
       label: 'Kopier ingredienser',
+      isDisabled: recipe?.ingredients.length === 0,
       onClick: () => setRecipeDetailsModal({ type: 'copyIngredients', recipeId: Number(id) }),
       icon: faAngleRight
     },
@@ -68,7 +69,7 @@ export const RecipeDetail: FC = () => {
   const handleCloseModal = () => {
     setRecipeDetailsModal(null);
   };
-  console.log(recipe)
+  console.log(recipe);
   if (isLoading) {
     return (
       <MainLayout spacing={4}>
@@ -86,11 +87,7 @@ export const RecipeDetail: FC = () => {
       action={<RecipeTopUi menuItems={menuItems} />}
       meta={
         (recipe?.categories ?? []).length > 0 &&
-        recipe?.categories?.map((cat) => (
-          <div className='w-fit p-1 px-2 rounded-2xl text-orange-600 border border-orange-600 text-xs'>
-            {cat.category_name}
-          </div>
-        ))
+        recipe?.categories?.map((cat) => <Pill text={cat.category_name} truncate />)
       }
     >
       {recipeDetailsModal && (
