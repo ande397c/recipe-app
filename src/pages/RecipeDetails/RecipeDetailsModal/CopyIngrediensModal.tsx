@@ -3,7 +3,7 @@ import { Button } from '@/components/shadcn/button';
 import { ScrollArea } from '@/components/shadcn/scroll-area';
 import { Skeleton } from '@/components/Skeleton';
 import { ReassignSelect } from '@/pages/GroceryListDetails/GroceryDetailsModal/CopyListContentModal';
-import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
+import { useBulkInsertGroceryItems } from '@/services/groceryItems/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchIngredients } from '@/services/ingredients/useFetchIngredients';
 import { CSSProperties, FC, FormEvent, useMemo, useState } from 'react';

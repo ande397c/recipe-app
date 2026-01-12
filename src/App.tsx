@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     element: <Navigate to='/recipes' replace />
   },
   {
-    path: '/meal-plan',
+    path: '/meal-plans',
     element: <MealPlan />
   },
   {

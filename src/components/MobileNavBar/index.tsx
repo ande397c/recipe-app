@@ -7,7 +7,7 @@ export const MobileNavBar: React.FC = () => {
   const menuItems = [
     { icon: faList, href: '/grocery-lists', label: 'Indkøbslister' },
     { icon: faUtensils, href: '/recipes', label: 'Opskrifter' },
-    { icon: faCalendarDays, href: '/meal-plan', label: 'Madplan' }
+    { icon: faCalendarDays, href: '/meal-plans', label: 'Madplaner' }
   ];
 
   return (

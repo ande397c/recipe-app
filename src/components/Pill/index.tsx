@@ -15,9 +15,7 @@ export const Pill: FC<PillProps> = ({ text, variant = 'neutral', truncate = fals
     <div
       className={clsx(
         'inline-flex max-w-full items-center rounded-2xl px-2 py-1 text-xs font-medium border',
-
         truncate && 'truncate whitespace-nowrap',
-
         {
           'bg-background text-foreground border-border': variant === 'neutral',
 
@@ -31,7 +29,6 @@ export const Pill: FC<PillProps> = ({ text, variant = 'neutral', truncate = fals
 
           'bg-destructive text-destructive-foreground border-destructive': variant === 'destructive'
         },
-
         className
       )}
       title={truncate ? text : undefined}

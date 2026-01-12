@@ -6,8 +6,8 @@ import { IconButton } from '@/components/IconButton';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { uppercaseFirstLetter } from '@/utils/uppercaseFirstLetter';
 import { DayCard } from './DayCard';
-import { mealPlanMock } from '@/interfaces/mealPlanDay';
 import { isSameCalendarDay } from './utils/isSameDate';
+import { useFetchMealPlans } from '@/services/MealPlans/useFetchMealPlans';
 
 interface ButtonNavigationProps {
   currentDay: Date;
@@ -25,8 +25,9 @@ const getFormattedWeekdays = (weekDays: Date[]): string[] =>
   );
 
 export const MealPlan: FC = () => {
+  const { data: mealPlans = [] } = useFetchMealPlans();
   const [day, setDay] = useState<Date>(new Date());
-  console.log({ mealPlanMock });
+
   const weekDays = getCurrentWeekDays(day);
 
   const goBack = () => {
@@ -46,12 +47,11 @@ export const MealPlan: FC = () => {
   };
 
   return (
-    <MainLayout title='Madplan' spacing={4}>
+    <MainLayout title='Madplaner' spacing={4}>
       <ButtonNavigation currentDay={day} onGoBack={goBack} onGoForward={goForward} />
       <ul className='grid grid-cols-1 gap-4'>
         {weekDays.map((day) => {
-          const plannedDay = mealPlanMock.find((meal) => isSameCalendarDay(day, meal.date));
-
+          const isPlanned = mealPlans.find((meal) => isSameCalendarDay(day, meal.created_at));
           return (
             <DayCard
               key={day.toISOString()}
@@ -60,8 +60,8 @@ export const MealPlan: FC = () => {
                 day: 'numeric',
                 month: 'numeric'
               })}
-              planned={!!plannedDay}
-              mealName={plannedDay?.name ?? 'Ikke planlagt'}
+              planned={!!isPlanned}
+              mealName={isPlanned?.name ?? 'Ikke planlagt'}
             />
           );
         })}
@@ -83,11 +83,15 @@ const ButtonNavigation: FC<ButtonNavigationProps> = ({ currentDay, onGoBack, onG
       <IconButton onClick={onGoBack} className='hover:bg-gray-200 h-10 w-10' icon={faAngleLeft} />
       <p className='font-semibold'>
         Uge: {weekNumber}{' '}
-        <span className='font-normal'>
+        <span className='font-normal text-foreground'>
           | {uppercaseFirstLetter(firstDay)} - {uppercaseFirstLetter(lastDay)}
         </span>
       </p>
-      <IconButton onClick={onGoForward} className='hover:bg-gray-200 h-10 w-10' icon={faAngleRight} />
+      <IconButton
+        onClick={onGoForward}
+        className='hover:bg-gray-200 h-10 w-10'
+        icon={faAngleRight}
+      />
     </div>
   );
 };

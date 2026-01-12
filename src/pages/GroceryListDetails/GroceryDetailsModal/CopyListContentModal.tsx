@@ -6,7 +6,7 @@ import { Spinner } from '@/components/shadcn/spinner';
 import { Skeleton } from '@/components/Skeleton';
 import { GroceryItem } from '@/interfaces/groceryItem';
 import { GroceryList } from '@/interfaces/groceryList';
-import { useBulkInsertGroceryItems } from '@/services/groceryItem/useBulkInsertGroceryItems';
+import { useBulkInsertGroceryItems } from '@/services/groceryItems/useBulkInsertGroceryItems';
 import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLists';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
 import { CSSProperties, FC, FormEvent, useMemo, useState } from 'react';

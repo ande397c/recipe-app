@@ -9,7 +9,7 @@ export const Input = ({ label, error, className, ...inputProps }: InputProps) =>
   return (
     <div>
       {label && (
-        <label className='block text-sm' htmlFor={inputProps.name}>
+        <label className='text-left block text-sm' htmlFor={inputProps.name}>
           {label}
         </label>
       )}

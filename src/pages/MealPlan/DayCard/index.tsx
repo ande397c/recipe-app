@@ -2,6 +2,7 @@ import { FC } from 'react';
 import clsx from 'clsx';
 import { IconButton } from '@/components/IconButton';
 import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { MealPlanDrawer } from '../MealPlanDrawer';
 
 interface DayCardProps {
   planned: boolean;
@@ -25,13 +26,15 @@ export const DayCard: FC<DayCardProps> = ({ planned, topHeading, mealName }) => 
           <p className='text-sm'>{topHeading.toUpperCase()}</p>
         </div>
 
-        <IconButton
-          icon={planned ? faPen : faPlus}
-          className={clsx('h-9 w-9', {
-            'text-emerald-600': planned,
-            'text-stone-400': !planned
-          })}
-        />
+        <MealPlanDrawer>
+          <IconButton
+            icon={planned ? faPen : faPlus}
+            className={clsx('h-9 w-9', {
+              'text-emerald-600': planned,
+              'text-stone-400': !planned
+            })}
+          />
+        </MealPlanDrawer>
       </div>
 
       <p className={clsx(planned ? 'text-stone-700' : 'text-stone-600')}>

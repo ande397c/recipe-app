@@ -3,8 +3,8 @@ import { MainLayout } from '@/components/MainLayout';
 import {
   CreateGroceryItemInput,
   useCreateGroceryItem
-} from '@/services/groceryItem/useCreateGroceryItem';
-import { useUpdateGroceryItem } from '@/services/groceryItem/useUpdateGroceryItem';
+} from '@/services/groceryItems/useCreateGroceryItem';
+import { useUpdateGroceryItem } from '@/services/groceryItems/useUpdateGroceryItem';
 import { useFetchSingleGroceryList } from '@/services/groceryLists/useFetchSingleGroceryList';
 import { useParams } from 'react-router-dom';
 import { GroceryItem } from '@/components/GroceryItem';
