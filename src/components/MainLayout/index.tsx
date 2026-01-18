@@ -14,7 +14,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   children
 }) => {
   return (
-    <main>
+    <main className='mb-[70px]'>
       <title>{title}</title>
       <div className={`flex flex-col gap-${spacing} gap-2 p-4`}>
         {action}

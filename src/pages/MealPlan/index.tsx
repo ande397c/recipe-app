@@ -8,6 +8,7 @@ import { uppercaseFirstLetter } from '@/utils/uppercaseFirstLetter';
 import { DayCard } from './DayCard';
 import { isSameCalendarDay } from './utils/isSameDate';
 import { useFetchMealPlans } from '@/services/MealPlans/useFetchMealPlans';
+import { CARD_HEADING_FORMAT_OPTIONS, WEEKDAYS_FORMAT_OPTIONS } from './lib/dateFormats';
 
 interface ButtonNavigationProps {
   currentDay: Date;
@@ -16,17 +17,13 @@ interface ButtonNavigationProps {
 }
 
 const getFormattedWeekdays = (weekDays: Date[]): string[] =>
-  weekDays.map((day) =>
-    day.toLocaleDateString('da-DK', {
-      weekday: 'short',
-      day: '2-digit',
-      month: 'numeric'
-    })
-  );
+  weekDays.map((day) => day.toLocaleDateString('da-DK', WEEKDAYS_FORMAT_OPTIONS));
+
+const today = new Date();
 
 export const MealPlan: FC = () => {
   const { data: mealPlans = [] } = useFetchMealPlans();
-  const [day, setDay] = useState<Date>(new Date());
+  const [day, setDay] = useState<Date>(today);
 
   const weekDays = getCurrentWeekDays(day);
 
@@ -51,17 +48,17 @@ export const MealPlan: FC = () => {
       <ButtonNavigation currentDay={day} onGoBack={goBack} onGoForward={goForward} />
       <ul className='grid grid-cols-1 gap-4'>
         {weekDays.map((day) => {
-          const isPlanned = mealPlans.find((meal) => isSameCalendarDay(day, meal.created_at));
+          const plannedMeal = mealPlans.find((meal) => isSameCalendarDay(day, meal.plan_date));
+          const isToday = isSameCalendarDay(day, today);
           return (
             <DayCard
               key={day.toISOString()}
-              topHeading={day.toLocaleDateString('da-DK', {
-                weekday: 'long',
-                day: 'numeric',
-                month: 'numeric'
-              })}
-              planned={!!isPlanned}
-              mealName={isPlanned?.name ?? 'Ikke planlagt'}
+              id={plannedMeal ? plannedMeal.id : undefined}
+              date={day}
+              topHeading={day.toLocaleDateString('da-DK', CARD_HEADING_FORMAT_OPTIONS)}
+              planned={!!plannedMeal}
+              isToday={isToday}
+              mealName={plannedMeal?.plan_name ?? 'Ikke planlagt'}
             />
           );
         })}

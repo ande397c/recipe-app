@@ -83,15 +83,14 @@ export const Recipes = () => {
         />
       </div>
       <ul className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-12'>
-        {searchVal.length === 0 ||
-          (selectedCategory !== 'all' && (
-            <RecipeCard
-              variant='add'
-              title='Tilføj'
-              isDense={isDenseView}
-              onClick={() => setDisplayModal(true)}
-            />
-          ))}
+        {searchVal.length === 0 && selectedCategory === 'all' && (
+          <RecipeCard
+            variant='add'
+            title='Tilføj'
+            isDense={isDenseView}
+            onClick={() => setDisplayModal(true)}
+          />
+        )}
         {filteredRecipies?.map((recipe) => (
           <RecipeCard
             key={recipe.id}

@@ -33,7 +33,6 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
     categoryId: String(recipe?.categories?.[0]?.id ?? ''),
     link: recipe?.recipe_url ?? ''
   });
-  console.log(showCategoryModal);
 
   const handleFormChange = (field: EditRecipeFormKeys, value: string) => {
     setFormData((prev) => ({

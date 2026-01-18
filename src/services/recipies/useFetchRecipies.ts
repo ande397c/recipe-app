@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
 import { RecipeItem } from '@/interfaces/recipeItem';
 
-type RecipyArray = Omit<RecipeItem, 'ingredients' | 'recipe_steps'>;
+export type RecipyArray = Omit<RecipeItem, 'ingredients' | 'recipe_steps'>;
 
 const fetchRecipies = async (): Promise<RecipyArray[]> => {
   const { data, error } = await supabase.from('recipes').select(

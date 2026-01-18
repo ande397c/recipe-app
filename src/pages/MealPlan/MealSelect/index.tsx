@@ -5,35 +5,45 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/shadcn/select';
+import { RecipyArray } from '@/services/recipies/useFetchRecipies';
 import { FC } from 'react';
 
 interface MealSelectProps {
   id: string;
   label: string;
+  defaultValue: string;
   placeholder?: string;
+  recipies: RecipyArray[];
   onValueChange: (recipeId: string) => void;
 }
 
-export const MealSelect: FC<MealSelectProps> = ({ id, label, placeholder, onValueChange }) => {
+export const MealSelect: FC<MealSelectProps> = ({
+  id,
+  label,
+  defaultValue,
+  placeholder,
+  recipies,
+  onValueChange
+}) => {
   return (
     <div>
       <label className='block' htmlFor={id}>
         {label}
       </label>
-      <Select name={id} onValueChange={(recipeId) => onValueChange(recipeId)}>
+      <Select
+        defaultValue={defaultValue}
+        name={id}
+        onValueChange={(recipeId) => onValueChange(recipeId)}
+      >
         <SelectTrigger id={id}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className='max-h-60'>
-          <SelectItem key='1' value='1'>
-            Wraps
-          </SelectItem>
-          <SelectItem key='2' value='2'>
-            Korteltter
-          </SelectItem>
-          <SelectItem key='3' value='3'>
-            Flødekartofler
-          </SelectItem>
+          {recipies?.map((recipe) => (
+            <SelectItem key={recipe.id} value={String(recipe.id)}>
+              {recipe.recipe_name}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>

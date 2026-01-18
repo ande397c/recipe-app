@@ -17,10 +17,9 @@ export const RecipeDetailsLayout: FC<RecipeDetailsLayoutProps> = ({
   children
 }) => {
   const hasHero = Boolean(backgroundImg);
-  console.log({ meta });
 
   return (
-    <main className='relative'>
+    <main className='relative mb-[70px]'>
       <title>{title}</title>
 
       <div className={clsx({ 'relative w-full': hasHero })}>

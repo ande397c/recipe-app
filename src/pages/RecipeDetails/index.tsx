@@ -69,7 +69,7 @@ export const RecipeDetail: FC = () => {
   const handleCloseModal = () => {
     setRecipeDetailsModal(null);
   };
-  console.log(recipe);
+
   if (isLoading) {
     return (
       <MainLayout spacing={4}>

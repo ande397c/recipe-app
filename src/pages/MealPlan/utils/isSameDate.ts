@@ -1,4 +1,7 @@
-export const isSameCalendarDay = (a: Date | string, b: Date | string): boolean => {
+export const isSameCalendarDay = (a: Date | string | null, b: Date | string | null): boolean => {
+  if (a === null || b === null) {
+    return false;
+  }
   const dateA = typeof a === 'string' ? new Date(a) : a;
   const dateB = typeof b === 'string' ? new Date(b) : b;
 
