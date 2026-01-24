@@ -30,7 +30,7 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
   const { data: categories } = useFetchCategories();
   const [formData, setFormData] = useState<FormData>({
     name: recipe?.recipe_name ?? '',
-    categoryId: String(recipe?.categories?.[0]?.id ?? ''),
+    categoryId: String(recipe?.category?.id ?? ''),
     link: recipe?.recipe_url ?? ''
   });
 

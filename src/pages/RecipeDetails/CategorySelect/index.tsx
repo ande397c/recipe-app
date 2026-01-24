@@ -11,24 +11,36 @@ interface CategorySelectProps {
   onActionClick: () => void;
 }
 
+import { useState } from 'react';
+
 export const CategorySelect: FC<CategorySelectProps> = ({
   defaultValue,
   categories,
   onValueChange,
   onActionClick
 }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleActionClick = () => {
+    onActionClick();
+    setOpen(false);
+  };
+
   return (
     <div>
-      <label className='block' htmlFor='categorySelect'>
+      <label className='text-left block text-sm' htmlFor='categorySelect'>
         Kategori
       </label>
+
       <Select
         name='categorySelect'
         defaultValue={defaultValue}
+        open={open}
+        onOpenChange={setOpen}
         onValueChange={(category) => onValueChange('categoryId', category)}
       >
         <SelectTrigger id='categorySelect'>
-          <SelectValue placeholder='Vælg categori' />
+          <SelectValue placeholder='Vælg kategori' />
         </SelectTrigger>
 
         <SelectContent className='max-h-60'>
@@ -37,8 +49,10 @@ export const CategorySelect: FC<CategorySelectProps> = ({
               {category.category_name}
             </SelectItem>
           ))}
+
           <SelectSeparator />
-          <SelectActionItem onSelect={onActionClick} className='text-primary font-medium'>
+
+          <SelectActionItem onSelect={handleActionClick} className='text-primary font-medium'>
             + Tilføj kategori
           </SelectActionItem>
         </SelectContent>

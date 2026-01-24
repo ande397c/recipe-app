@@ -85,10 +85,7 @@ export const RecipeDetail: FC = () => {
       title={recipe?.recipe_name}
       backgroundImg={recipe?.img_url}
       action={<RecipeTopUi menuItems={menuItems} />}
-      meta={
-        (recipe?.categories ?? []).length > 0 &&
-        recipe?.categories?.map((cat) => <Pill text={cat.category_name} truncate />)
-      }
+      meta={recipe?.category && <Pill text={recipe.category.category_name} />}
     >
       {recipeDetailsModal && (
         <RecipeyDetailsModals {...recipeDetailsModal} onClose={handleCloseModal} />

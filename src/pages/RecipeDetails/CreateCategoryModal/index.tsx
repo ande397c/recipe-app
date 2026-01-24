@@ -42,7 +42,7 @@ export const CreateCategoryModal: FC<CreateCategoryModalProps> = ({ onClose }) =
     >
       <form onSubmit={handleUpdateRecipe}>
         <Input
-          label='Opskrift navn'
+          label='Kategori navn'
           name='name'
           id='name'
           type='text'

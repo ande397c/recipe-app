@@ -11,18 +11,18 @@ import { View } from '@/constants';
 import { Input } from '@/components/Input';
 import { CategoryFilterSelect } from './RecipeFilterSelect';
 import { useFetchCategories } from '@/services/categories/useFetchCategories';
+import { CardListContainer } from '@/components/CardList';
 
 export const Recipes = () => {
   const { data: recipies, isLoading } = useFetchRecipies();
   const { data: categories } = useFetchCategories();
-  const { setItem, getItem } = useLocalStorage('view');
+  const { getItem } = useLocalStorage('view');
   const [displayModal, setDisplayModal] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [view, setView] = useState<View>(getItem() ?? 'grid');
 
   const isDenseView = view === 'list';
-
   const filteredRecipies = useMemo(() => {
     if (!recipies) {
       return [];
@@ -30,10 +30,7 @@ export const Recipes = () => {
 
     return recipies.filter((recipe) => {
       const matchesCategory =
-        selectedCategory === 'all'
-          ? true
-          : (recipe.categories?.some((category) => String(category.id) === selectedCategory) ??
-            false);
+        selectedCategory === 'all' ? true : String(recipe.category?.id) === selectedCategory;
 
       const matchesSearch =
         searchVal.trim() === ''
@@ -43,12 +40,6 @@ export const Recipes = () => {
       return matchesCategory && matchesSearch;
     });
   }, [recipies, selectedCategory, searchVal]);
-
-  const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const viewValue = e.currentTarget.value as View;
-    setView(viewValue);
-    setItem(viewValue);
-  };
 
   if (isLoading) {
     return (
@@ -67,7 +58,6 @@ export const Recipes = () => {
   return (
     <MainLayout title='Opskrifter' spacing={4}>
       {displayModal && <CreateRecipeModal displayModal onClose={() => setDisplayModal(false)} />}
-      <ViewButtons isDenseView={isDenseView} onChangeView={handleViewChange} />
       <div className='flex items-center justify-between gap-2 flex-wrap'>
         <CategoryFilterSelect
           categories={categories ?? []}
@@ -82,7 +72,8 @@ export const Recipes = () => {
           id='search'
         />
       </div>
-      <ul className='grid grid-cols-2 md:grid-cols-3 gap-4 mb-12'>
+      <ViewButtons isDenseView={isDenseView} onViewChange={(view) => setView(view)} />
+      <CardListContainer>
         {searchVal.length === 0 && selectedCategory === 'all' && (
           <RecipeCard
             variant='add'
@@ -100,7 +91,7 @@ export const Recipes = () => {
             id={recipe.id}
           />
         ))}
-      </ul>
+      </CardListContainer>
     </MainLayout>
   );
 };

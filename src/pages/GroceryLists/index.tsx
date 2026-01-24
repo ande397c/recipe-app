@@ -8,21 +8,16 @@ import { useFetchGroceryLists } from '@/services/groceryLists/useFetchGroceryLis
 import { useMemo, useState } from 'react';
 import { AddGroceryListModal } from './AddGroceryListModal';
 import { Input } from '@/components/Input';
+import { CardListContainer } from '@/components/CardList';
 
 export const GroceryLists = () => {
   const { data: groceryLists, isLoading } = useFetchGroceryLists();
-  const { setItem, getItem } = useLocalStorage('view');
+  const { getItem } = useLocalStorage('view');
   const [displayModal, setDisplayModal] = useState(false);
   const [searchVal, setSearchVal] = useState('');
   const [view, setView] = useState<View>(getItem() ?? 'grid');
 
   const isDenseView = view === 'list';
-
-  const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const viewValue = e.currentTarget.value as View;
-    setView(viewValue);
-    setItem(viewValue);
-  };
 
   const filteredGroceryLists = useMemo(() => {
     if (!groceryLists) {
@@ -37,7 +32,7 @@ export const GroceryLists = () => {
 
       return matchesSearch;
     });
-  }, [groceryLists, searchVal]);
+  }, [groceryLists, searchVal]);  
 
   if (isLoading) {
     return (
@@ -56,7 +51,6 @@ export const GroceryLists = () => {
   return (
     <MainLayout title='Indkøbslister' spacing={4}>
       {displayModal && <AddGroceryListModal showModal onClose={() => setDisplayModal(false)} />}
-      <ViewButtons isDenseView={isDenseView} onChangeView={handleViewChange} />
       <Input
         value={searchVal}
         onChange={(e) => setSearchVal(e.target.value)}
@@ -64,7 +58,8 @@ export const GroceryLists = () => {
         name='search'
         id='search'
       />
-      <ul className='grid grid-cols-2 gap-4 mb-12'>
+      <ViewButtons isDenseView={isDenseView} onViewChange={(view) => setView(view)} />
+      <CardListContainer>
         {searchVal.length === 0 && (
           <RecipeCard
             variant='add'
@@ -82,7 +77,7 @@ export const GroceryLists = () => {
             title={groceryList.list_name}
           />
         ))}
-      </ul>
+      </CardListContainer>
     </MainLayout>
   );
 };

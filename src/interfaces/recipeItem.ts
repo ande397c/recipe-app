@@ -10,5 +10,5 @@ export interface RecipeItem {
   img_url?: string;
   ingredients: IngredientItem[];
   recipe_steps: RecipeStep[];
-  categories: Category[] | null;
+  category: Category | null;
 }

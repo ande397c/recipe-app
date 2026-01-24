@@ -5,27 +5,26 @@ import { RecipeItem } from '@/interfaces/recipeItem';
 export type RecipyArray = Omit<RecipeItem, 'ingredients' | 'recipe_steps'>;
 
 const fetchRecipies = async (): Promise<RecipyArray[]> => {
-  const { data, error } = await supabase.from('recipes').select(
-    `
+  const { data, error } = await supabase
+    .from('recipes')
+    .select(
+      `
       id,
       recipe_name,
       recipe_url,
       img_url,      
-      categories (
+        category:categories (
         id,
         category_name
-      )
+        )      
     `
-  );
+    )
+    .overrideTypes<RecipyArray[], { merge: false }>();
 
   if (error) {
     throw new Error(error.message);
   }
-  // @ts-expect-error Supabase is returning categories as an object at runtime, but TypeScript still thinks it’s an array
-  return data.map((recipe: RecipyArray) => ({
-    ...recipe,
-    categories: recipe.categories ? [recipe.categories] : []
-  }));
+  return data;
 };
 
 export const useFetchRecipies = () => {

@@ -6,6 +6,7 @@ import {
   useCreateIngredient
 } from '@/services/ingredients/useCreateIngredient';
 import { useUpdateIngredient } from '@/services/ingredients/useUpdateIngredient';
+import { Input } from '@/components/Input';
 
 interface RecipeDetailsIngredientsProps {
   recipeId: number;
@@ -62,9 +63,8 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
     <>
       <h2 className='text-lg font-semibold'>Ingredienser</h2>
       <form onSubmit={handleCreateItem}>
-        <input
+        <Input
           name='add'
-          className='w-full'
           value={newItem}
           type='text'
           placeholder='Tilføj ingrediens'
