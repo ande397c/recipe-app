@@ -62,6 +62,7 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
           id='name'
           name='name'
           autoFocus
+          required
           type='text'
           placeholder='Koteletter i sticky sauce'
           value={formData.name}

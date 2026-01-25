@@ -80,17 +80,12 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
             <Input
               label='Opskrift navn'
               name='name'
+              required
               id='name'
               type='text'
               placeholder='Burger'
               value={formData.name}
               onChange={(e) => handleFormChange('name', e.target.value)}
-            />
-            <CategorySelect
-              defaultValue={formData.categoryId}
-              categories={categories ?? []}
-              onValueChange={handleFormChange}
-              onActionClick={() => setShowCategoryModal(true)}
             />
             <Input
               label='Link'
@@ -101,6 +96,12 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
               value={formData.link}
               onChange={(e) => handleFormChange('link', e.target.value)}
             />
+            <CategorySelect
+              defaultValue={formData.categoryId}
+              categories={categories ?? []}
+              onValueChange={handleFormChange}
+              onActionClick={() => setShowCategoryModal(true)}
+            />
           </div>
         )}
         <BaseModal.Actions>
@@ -109,7 +110,7 @@ export const EditRecipeModal: FC<EditRecipeModalProps> = ({ recipeId, onClose })
           </Button>
           <Button className='w-full' disabled={isUpdatingRecipe}>
             {isUpdatingRecipe && <Spinner />}
-            Rediger
+            Bekræft
           </Button>
         </BaseModal.Actions>
       </form>

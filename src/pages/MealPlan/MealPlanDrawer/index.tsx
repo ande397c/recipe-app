@@ -16,7 +16,7 @@ import { da } from 'react-day-picker/locale';
 import { ChangeMealDrawerView } from '../MealDrawerView';
 import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/shadcn/item';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faCalendarXmark } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { useFetchSingleMealPlan } from '@/services/MealPlans/useFetchSingleMealPlan';
 import { Skeleton } from '@/components/Skeleton';
@@ -30,6 +30,7 @@ import {
   CreateBulkMealPlansInput,
   useCreateBulkMealPlans
 } from '@/services/MealPlans/useCreateBulkMealPlans';
+import { Empty } from '@/components/Empty';
 
 type MealDrawerView = 'preview' | 'edit';
 
@@ -62,6 +63,7 @@ const getInitalView = (id: number | undefined): MealDrawerView => {
 
 export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onClose }) => {
   const fetchEnabled = !!id;
+  console.log({ fetchEnabled });
   const [view, setView] = useState<MealDrawerView>(getInitalView(id));
   const { data: mealPlan, isLoading } = useFetchSingleMealPlan(id, fetchEnabled);
 
@@ -84,7 +86,11 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
               {uppercaseFirstLetter(date.toLocaleDateString('da-DK', MEAL_DRAWER_HEADING))}
             </DrawerTitle>
           </DrawerHeader>
-          <ChangeMealDrawerView onChangeView={handleViewChange} isPreviewView={isPreviewView} />
+          <ChangeMealDrawerView
+            isNewPlan={fetchEnabled}
+            onChangeView={handleViewChange}
+            isPreviewView={isPreviewView}
+          />
           {isPreviewView ? (
             <MealPreview meal={mealPlan} />
           ) : (
@@ -99,7 +105,15 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
 // Componnet
 const MealPreview: FC<{ meal: MealPlanDay | undefined }> = ({ meal }) => {
   if (!meal) {
-    return <div>Ingen måltid valgt</div>;
+    return (
+      <div className='flex flex-col gap-4 py-4'>
+        <Empty
+          icon={faCalendarXmark}
+          title='Intet planlagt'
+          description='Tilføj et måltid ved at trykke på rediger'
+        />
+      </div>
+    );
   }
 
   return (

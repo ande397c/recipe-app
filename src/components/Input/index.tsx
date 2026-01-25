@@ -5,12 +5,13 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export const Input = ({ label, error, className, ...inputProps }: InputProps) => {
+export const Input = ({ label, error, className, required, ...inputProps }: InputProps) => {
   return (
     <div>
       {label && (
         <label className='text-left block text-sm' htmlFor={inputProps.name}>
           {label}
+          {required && <span> *</span>}
         </label>
       )}
       <input

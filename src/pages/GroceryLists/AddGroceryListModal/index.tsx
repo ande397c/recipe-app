@@ -41,9 +41,10 @@ export const AddGroceryListModal: FC<AddGroceryListModalProps> = ({ showModal, o
           label='Navn'
           name='name'
           id='name'
+          required
           autoFocus
           type='text'
-          placeholder='basisvarer'
+          placeholder='Basisvarer'
           onChange={(e) => setGroceryListName(e.target.value)}
         />
         <div className='flex items-center'>

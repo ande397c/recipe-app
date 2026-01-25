@@ -12,7 +12,7 @@ export const MobileNavBar: React.FC = () => {
 
   return (
     <nav className='fixed bottom-0 w-full bg-neutral-800 border p-2.5'>
-      <ul className='flex justify-evenly gap-4'>
+      <ul className='flex justify-evenly gap-6'>
         {menuItems.map((item) => (
           <NavLink
             key={item.href}

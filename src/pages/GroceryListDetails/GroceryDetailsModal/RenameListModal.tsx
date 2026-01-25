@@ -41,7 +41,7 @@ export const RenameListModal: FC<RenameListModalProps> = ({ listId, onClose }) =
   };
 
   return (
-    <BaseModal showModal={true} title='Omdøb liste navn' size='sm' onClose={onClose}>
+    <BaseModal showModal={true} title='Omdøb liste' size='sm' onClose={onClose}>
       <form onSubmit={handleRenameGroceryList}>
         {isLoadingListDeatils ? (
           <div className='flex flex-col gap-4'>
@@ -52,6 +52,7 @@ export const RenameListModal: FC<RenameListModalProps> = ({ listId, onClose }) =
             <Input
               label='Navn'
               type='text'
+              required
               defaultValue={groceryList?.list_name}
               placeholder='Basis vare'
               onChange={(e) => setNewListName(e.target.value)}

@@ -3,11 +3,13 @@ import { ButtonGroup } from '@/components/shadcn/button-group';
 import { FC } from 'react';
 
 interface ChangeMealDrawerViewProps {
+  isNewPlan: boolean
   isPreviewView: boolean;
   onChangeView: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export const ChangeMealDrawerView: FC<ChangeMealDrawerViewProps> = ({
+  isNewPlan,
   isPreviewView,
   onChangeView
 }) => {
@@ -27,7 +29,7 @@ export const ChangeMealDrawerView: FC<ChangeMealDrawerViewProps> = ({
         onClick={onChangeView}
         value='edit'
       >
-        Rediger
+        {!isNewPlan ? 'Tilføj' : 'Rediger'}
       </Button>
     </ButtonGroup>
   );
