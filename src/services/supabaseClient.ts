@@ -1,10 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://afewhxffjdlieabhptms.supabase.co';
-const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
+const SUPABASE_URL = 'https://afewhxffjdlieabhptms.supabase.co';
+const SUPABASE_API_KEY = import.meta.env.VITE_SUPABASE_API_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+if (!SUPABASE_URL || !SUPABASE_API_KEY) {
   throw new Error('Missing Supabase environment variables');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+export const supabase = createClient(SUPABASE_URL, SUPABASE_API_KEY);
