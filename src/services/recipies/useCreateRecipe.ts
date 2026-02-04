@@ -5,15 +5,15 @@ import { GroceryList } from '@/interfaces/groceryList';
 export interface CreateRecipeInput {
   name: string;
   link: string;
-  imgageUrl: string;
+  // imgageUrl: string;
 }
 
-const createRecipe = async ({ name, link, imgageUrl }: CreateRecipeInput): Promise<GroceryList> => {
+const createRecipe = async ({ name, link }: CreateRecipeInput): Promise<GroceryList> => {
   if (!name) throw new Error('listId is required');
 
   const { data, error } = await supabase
     .from('recipes')
-    .insert([{ recipe_name: name, recipe_url: link, img_url: imgageUrl }])
+    .insert([{ recipe_name: name, recipe_url: link }])
     .select()
     .single();
 

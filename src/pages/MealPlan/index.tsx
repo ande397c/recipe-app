@@ -24,7 +24,7 @@ const today = new Date();
 export const MealPlan: FC = () => {
   const { data: mealPlans = [] } = useFetchMealPlans();
   const [day, setDay] = useState<Date>(today);
-
+  
   const weekDays = getCurrentWeekDays(day);
 
   const goBack = () => {
@@ -58,7 +58,7 @@ export const MealPlan: FC = () => {
               topHeading={day.toLocaleDateString('da-DK', CARD_HEADING_FORMAT_OPTIONS)}
               planned={!!plannedMeal}
               isToday={isToday}
-              mealName={plannedMeal?.plan_name ?? 'Ikke planlagt'}
+              mealName={(plannedMeal?.plan_name || plannedMeal?.recipe?.recipe_name) ?? 'Ikke planlagt'}
             />
           );
         })}

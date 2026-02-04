@@ -20,7 +20,7 @@ const fetchSingleRecipe = async (id: number | undefined): Promise<RecipeItem> =>
         id,
         instruction,
         is_completed
-      ),
+      ) order by id.asc,
       category:categories!recipes_category_id_fkey (
         id,
         category_name

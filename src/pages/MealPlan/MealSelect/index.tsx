@@ -2,11 +2,13 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue
 } from '@/components/shadcn/select';
+import { SelectActionItem } from '@/components/shadcn/x';
 import { RecipyArray } from '@/services/recipies/useFetchRecipies';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 
 interface MealSelectProps {
   id: string;
@@ -25,6 +27,9 @@ export const MealSelect: FC<MealSelectProps> = ({
   recipies,
   onValueChange
 }) => {
+  const [value, setValue] = useState<string>(defaultValue);
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div>
       <label className='block' htmlFor={id}>
@@ -33,7 +38,13 @@ export const MealSelect: FC<MealSelectProps> = ({
       <Select
         defaultValue={defaultValue}
         name={id}
-        onValueChange={(recipeId) => onValueChange(recipeId)}
+        onValueChange={(value) => {
+          setValue(value);
+          onValueChange(value);
+        }}
+        value={value || ''}
+        open={isOpen}
+        onOpenChange={setIsOpen}
       >
         <SelectTrigger id={id}>
           <SelectValue placeholder={placeholder} />
@@ -44,6 +55,17 @@ export const MealSelect: FC<MealSelectProps> = ({
               {recipe.recipe_name}
             </SelectItem>
           ))}
+          <SelectSeparator />
+          <SelectActionItem
+            onSelect={() => {              
+              setValue('');
+              onValueChange('');
+              setIsOpen(false);
+            }}
+            className='text-primary font-medium'
+          >
+            Clear
+          </SelectActionItem>
         </SelectContent>
       </Select>
     </div>

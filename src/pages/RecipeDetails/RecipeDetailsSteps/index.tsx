@@ -8,6 +8,15 @@ import { RecipeStep } from '@/interfaces/recipeStep';
 import clsx from 'clsx';
 import { AutoExpandingTextarea } from './AutoExpandingTextarea';
 
+const sortedItems = (items: RecipeStep[] | undefined) => {
+  if (!items) {
+    return [];
+  }
+  return items.sort((a, b) => {    
+    return a.id - b.id;
+  });
+};
+
 interface RecipeDetailsStepsProps {
   recipeId: number;
   steps: RecipeStep[];
@@ -44,14 +53,18 @@ export const RecipeDetailsSteps: FC<RecipeDetailsStepsProps> = ({ steps, recipeI
     <>
       <h2 className='text-lg font-semibold'>Fremgangsmåde</h2>
       <AutoExpandingTextarea onCreateStep={handleCreateStep} />
-      <ol className='list-decimal pl-4 cursor-pointer'>
-        {steps.map((step) => (
+      <ol className='space-y-2'>
+        {sortedItems(steps).map((step, index) => (
           <li
-            key={step.instruction}
-            className={clsx('mb-2', step.is_completed && 'line-through')}
+            key={step.id}
+            className={clsx(
+              'flex items-start gap-2 rounded-md p-2 transition-colors hover:bg-stone-50 hover:cursor-pointer',
+              step.is_completed && 'line-through text-stone-500'
+            )}
             onClick={() => handleUpdateRecipeStep(step.id, !step.is_completed)}
           >
-            {step.instruction}
+            <span className='text-xs text-stone-400 mt-1'>{index + 1}.</span>
+            <span>{step.instruction}</span>
           </li>
         ))}
       </ol>

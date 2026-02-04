@@ -7,22 +7,12 @@ import {
 } from '@/services/ingredients/useCreateIngredient';
 import { useUpdateIngredient } from '@/services/ingredients/useUpdateIngredient';
 import { Input } from '@/components/Input';
+import { sortItemsUncheckedFirst } from '@/utils/sortItems';
 
 interface RecipeDetailsIngredientsProps {
   recipeId: number;
   ingredients: IngredientItem[];
 }
-
-const sortedItens = (items: IngredientItem[] | undefined) => {
-  if (!items) {
-    return [];
-  }
-  return items.sort((a, b) => {
-    if (a.is_checked && !b.is_checked) return 1;
-    if (!a.is_checked && b.is_checked) return -1;
-    return a.ingredient_name.localeCompare(b.ingredient_name);
-  });
-};
 
 export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
   ingredients,
@@ -73,7 +63,7 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
         />
         <button className='hidden'>Tilføj</button>
       </form>
-      {sortedItens(ingredients)?.map((ingredient) => (
+      {sortItemsUncheckedFirst(ingredients)?.map((ingredient) => (
         <GroceryItem
           key={ingredient.id}
           id={ingredient.id}

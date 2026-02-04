@@ -11,21 +11,11 @@ import { GroceryItem } from '@/components/GroceryItem';
 import { GroceryListOperations } from './GroceryListOperations';
 import { GroceryDetailsModals, GroceryDetailsModalsProps } from './GroceryDetailsModal';
 import { Skeleton } from '@/components/Skeleton';
-import { GroceryItem as GroceryItemInterface } from '@/interfaces/groceryItem';
 import { IconButton } from '@/components/IconButton';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/Input';
+import { sortItemsUncheckedFirst } from '@/utils/sortItems';
 
-const sortedItens = (items: GroceryItemInterface[] | undefined) => {
-  if (!items) {
-    return [];
-  }
-  return items.sort((a, b) => {
-    if (a.is_checked && !b.is_checked) return 1;
-    if (!a.is_checked && b.is_checked) return -1;
-    return a.grocery_item.localeCompare(b.grocery_item);
-  });
-};
 
 export const GroceryListDetails = () => {
   const { id } = useParams();
@@ -113,7 +103,7 @@ export const GroceryListDetails = () => {
         />
         <button className='hidden'>Tilføj</button>
       </form>
-      {sortedItens(singleGroceryList?.grocery_items)?.map((item) => (
+      {sortItemsUncheckedFirst(singleGroceryList?.grocery_items).map((item) => (
         <GroceryItem
           key={item.id}
           id={item.id}

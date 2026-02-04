@@ -1,8 +1,8 @@
 import { FC, useState } from 'react';
 import clsx from 'clsx';
-import { IconButton } from '@/components/IconButton';
 import { faPen, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { MealPlanDrawer } from '../MealPlanDrawer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface DayCardProps {
   id: number | undefined;
@@ -18,10 +18,16 @@ export const DayCard: FC<DayCardProps> = ({ id, planned, date, isToday, topHeadi
   return (
     <>
       {displayDrawer && (
-        <MealPlanDrawer id={id} date={date} isOpen={displayDrawer} onClose={() => setDisplayDrawer(false)} />
+        <MealPlanDrawer
+          id={id}
+          date={date}
+          isOpen={displayDrawer}
+          onClose={() => setDisplayDrawer(false)}
+        />
       )}
       <li
-        className={clsx('relative rounded-md px-3 py-2 border transition-colors', {
+        onClick={() => setDisplayDrawer(true)}
+        className={clsx('relative rounded-md px-3 py-2 border transition-colors cursor-pointer', {
           'border-black': isToday,
           'bg-emerald-50 border-emerald-200': planned && !isToday,
           'bg-muted/40 border-dashed border-border': !planned && !isToday
@@ -45,14 +51,13 @@ export const DayCard: FC<DayCardProps> = ({ id, planned, date, isToday, topHeadi
               {topHeading.toUpperCase()}
             </p>
           </div>
-          <IconButton
-            onClick={() => setDisplayDrawer(true)}
+          <FontAwesomeIcon
             icon={planned ? faPen : faPlus}
             className={clsx('h-9 w-9 transition-colors', {
-              'text-emerald-600 hover:bg-emerald-100': planned,
-              'text-muted-foreground hover:bg-muted': !planned
+              'text-emerald-600': planned,
+              'text-muted-foreground': !planned
             })}
-          />
+          />          
         </div>
 
         <p className={clsx(planned ? 'text-stone-700' : 'text-stone-600')}>{mealName}</p>

@@ -9,7 +9,6 @@ import { Spinner } from '@/components/shadcn/spinner';
 interface FormData {
   name: string;
   link: string;
-  imgageUrl: string;
   redirectOnSuccess: boolean;
 }
 
@@ -20,10 +19,10 @@ interface CreateRecipeModalProps {
 
 export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalProps) => {
   const navigate = useNavigate();
+  const [img, setImg] = useState<File | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     link: '',
-    imgageUrl: '',
     redirectOnSuccess: true
   });
   const { mutate: createRecipe, isPending: isCreatingRecipe } = useCreateRecipe();
@@ -76,6 +75,13 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
           placeholder='https://madensverden.dk/koteletter-i-sticky-sauce/'
           value={formData.link}
           onChange={handleFormChange}
+        />
+        <Input
+          id='img'
+          name='img'
+          label='Billede'
+          type='file'
+          onChange={(e) => setImg(e.target.files?.[0] || null)}
         />
         <div className='flex items-center'>
           <input

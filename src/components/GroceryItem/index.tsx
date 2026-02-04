@@ -8,29 +8,26 @@ interface GroceryItemProps {
 }
 
 export const GroceryItem: React.FC<GroceryItemProps> = ({ id, name, isChecked, onChange }) => {
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(id, event.target.checked);
-  };
-
   return (
-    <div className='flex items-center gap-2'>
+    <label
+      htmlFor={String(id)}
+      className={clsx(
+        'flex items-center gap-3 rounded-md px-2 py-2 cursor-pointer',
+        isChecked ? 'bg-stone-100 text-stone-400' : 'hover:bg-stone-50'
+      )}
+    >
       <input
-        className='m-2 w-4 h-4 text-white accent-orange-600 rounded-xs'
+        className='h-4 w-4 accent-primary'
         type='checkbox'
         id={String(id)}
         name={name}
         checked={isChecked}
-        onChange={handleInputChange}
+        onChange={(e) => onChange(id, e.target.checked)}
       />
-      <label
-        htmlFor={String(id)}
-        className={clsx('select-none ms-2 font-medium text-heading', {
-          'text-black': !isChecked,
-          'text-black line-through': isChecked
-        })}
-      >
+
+      <span className={clsx('flex-1 select-none text-sm', isChecked && 'line-through')}>
         {name}
-      </label>
-    </div>
+      </span>
+    </label>
   );
 };

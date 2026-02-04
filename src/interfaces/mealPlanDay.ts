@@ -1,6 +1,6 @@
 import { RecipeItem } from "./recipeItem";
 
-type PreviewRecipe = Omit<RecipeItem, 'ingredients' | 'recipe_steps' | 'categories' | 'recipe_url'>;
+type PreviewRecipe = Omit<RecipeItem, 'ingredients' | 'recipe_steps' | 'category' | 'recipe_url'>;
 
 export interface MealPlanDay {
   id: number;

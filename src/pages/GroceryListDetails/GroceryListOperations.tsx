@@ -75,8 +75,8 @@ export const GroceryListOperations = ({
       icon: faAngleRight
     },
     { label: 'Check alle', isDisabled: listIsEmpty, onClick: handleCheckAll, icon: faCheck },
-    { label: 'Omdøb liste', onClick: onDisplayRenameModal, icon: faEdit },
     { label: 'Clear liste', isDisabled: listIsEmpty, onClick: handleDeleteAll, icon: faX },
+    { label: 'Omdøb liste', onClick: onDisplayRenameModal, icon: faEdit },
     { label: 'Slet liste', onClick: onDisplayDeleteListModal, icon: faTrashAlt, color: 'danger' }
   ];
 

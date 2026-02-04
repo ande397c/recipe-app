@@ -12,7 +12,6 @@ export const Popover: FC<PopoverProps> = ({ trigger, children, align = 'left', c
   const [open, setOpen] = useState(false);
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // close on outside click
   useEffect(() => {
     if (!open) return;
 
@@ -27,7 +26,7 @@ export const Popover: FC<PopoverProps> = ({ trigger, children, align = 'left', c
   }, [open]);
 
   return (
-    <div className='relative inline-block' ref={popoverRef}>
+    <div className='relative inline-block w-full' ref={popoverRef}>
       <button type='button' onClick={() => setOpen((prev) => !prev)} className='w-full'>
         {trigger}
       </button>

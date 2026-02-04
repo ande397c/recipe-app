@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
@@ -22,7 +21,6 @@ import { useFetchSingleMealPlan } from '@/services/MealPlans/useFetchSingleMealP
 import { Skeleton } from '@/components/Skeleton';
 import { MealPlanDay } from '@/interfaces/mealPlanDay';
 import { useFetchRecipies } from '@/services/recipies/useFetchRecipies';
-import { useCreateMealPlan } from '@/services/MealPlans/useCreateMealPlan';
 import { UpdateMealPlanInput, useUpdateMealPlan } from '@/services/MealPlans/useUpdateMealPlan';
 import { MEAL_DRAWER_HEADING } from '../lib/dateFormats';
 import { uppercaseFirstLetter } from '@/utils/uppercaseFirstLetter';
@@ -31,6 +29,7 @@ import {
   useCreateBulkMealPlans
 } from '@/services/MealPlans/useCreateBulkMealPlans';
 import { Empty } from '@/components/Empty';
+import { useDeleteMealPlan } from '@/services/MealPlans/useDeleteMealPlan';
 
 type MealDrawerView = 'preview' | 'edit';
 
@@ -63,7 +62,6 @@ const getInitalView = (id: number | undefined): MealDrawerView => {
 
 export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onClose }) => {
   const fetchEnabled = !!id;
-  console.log({ fetchEnabled });
   const [view, setView] = useState<MealDrawerView>(getInitalView(id));
   const { data: mealPlan, isLoading } = useFetchSingleMealPlan(id, fetchEnabled);
 
@@ -74,13 +72,10 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
     setView(viewValue);
   };
 
-  if (isLoading) {
-    return <Skeleton shape='rect' height='5rem' />;
-  }
   return (
-    <Drawer open={isOpen} onAnimationEnd={(open) => console.log(!open)} onClose={onClose}>
-      <DrawerContent className='px-3'>
-        <div className='mx-auto w-full max-w-sm'>
+    <Drawer open={isOpen} onClose={onClose}>
+      <DrawerContent className='px-3'>        
+        <div className='w-full'>
           <DrawerHeader>
             <DrawerTitle>
               {uppercaseFirstLetter(date.toLocaleDateString('da-DK', MEAL_DRAWER_HEADING))}
@@ -92,7 +87,7 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
             isPreviewView={isPreviewView}
           />
           {isPreviewView ? (
-            <MealPreview meal={mealPlan} />
+            <MealPreview isLoading={isLoading} meal={mealPlan} />
           ) : (
             <EditMealForm id={id} date={date} meal={mealPlan} onClose={onClose} />
           )}
@@ -103,15 +98,16 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
 };
 
 // Componnet
-const MealPreview: FC<{ meal: MealPlanDay | undefined }> = ({ meal }) => {
+const MealPreview: FC<{ meal: MealPlanDay | undefined, isLoading: boolean }> = ({ meal, isLoading }) => {
+  
+  if (isLoading) {
+    return <Skeleton shape='rect' height='2rem' />;
+  }
+
   if (!meal) {
     return (
-      <div className='flex flex-col gap-4 py-4'>
-        <Empty
-          icon={faCalendarXmark}
-          title='Intet planlagt'
-          description='Tilføj et måltid ved at trykke på rediger'
-        />
+      <div className='flex flex-col gap-4 py-4 mt-3'>
+        <Empty icon={faCalendarXmark} title='Intet planlagt' description='Tilføj et måltid' />
       </div>
     );
   }
@@ -152,16 +148,18 @@ const EditMealForm: FC<{
   onClose: () => void;
 }> = ({ meal, id, date, onClose }) => {
   const { data: recipies = [] } = useFetchRecipies();
-  const { mutate: createMealPlan } = useCreateMealPlan();
   const { mutate: createBulkMealPlans } = useCreateBulkMealPlans();
   const { mutate: updateMealPlan } = useUpdateMealPlan();
-  const [selected, setSelected] = useState<Date[]>();
+  const { mutate: deleteMealPlan } = useDeleteMealPlan();
+  const [selected, setSelected] = useState<Date[]>([date]);
   const [formData, setFormData] = useState<FormData>({
     name: meal?.plan_name ?? '',
-    recipeId: meal?.recipe?.id,
+    recipeId: meal?.recipe?.id ?? undefined,
     note: meal?.plan_note ?? ''
   });
+
   const isEditingMeal = !!id;
+  const isSubmitDisabled = formData.name.trim() === '' && !formData.recipeId;
 
   const handleFormChange = (field: formKeys, value: string) => {
     setFormData((prev) => ({
@@ -169,6 +167,17 @@ const EditMealForm: FC<{
       [field]: value
     }));
   };
+
+  const handleDeleteMealPlan = () => {
+    deleteMealPlan(
+      { id },
+      {
+        onSuccess: () => {
+          onClose();
+        }
+      }
+    );
+  }
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,7 +208,7 @@ const EditMealForm: FC<{
       const payload: CreateBulkMealPlansInput = {
         name: formData.name,
         note: formData.note,
-        recipeId: Number(formData.recipeId),
+        recipeId: formData.recipeId ? Number(formData.recipeId) : null,
         planDates: selected
       };
       createBulkMealPlans(payload, {
@@ -207,74 +216,83 @@ const EditMealForm: FC<{
           onClose();
         }
       });
-      return;
     }
-
-    const payLoad = {
-      name: formData.name,
-      note: formData.note,
-      recipeId: Number(formData.recipeId),
-      planDate: date
-    };
-    createMealPlan(payLoad, {
-      onSuccess: () => {
-        onClose();
-      }
-    });
   };
 
   return (
     <>
       <form id='meal-plan-form' className='flex flex-col gap-4 mt-4' onSubmit={handleFormSubmit}>
-        <Input
-          name='name'
-          id='name'
-          label='Navn'
-          placeholder='Wraps i ovn'
-          value={formData.name}
-          onChange={(e) => handleFormChange('name', e.target.value)}
-        />
-        <MealSelect
-          id='selectRecipe'
-          defaultValue={String(formData.recipeId ?? '')}
-          label='Vælg opkrift'
-          recipies={recipies}
-          onValueChange={(id) => handleFormChange('recipeId', id)}
-        />
-        <Popover
-          align='left'
-          trigger={
-            <Input
-              label='Vælg til flere dage'
-              placeholder='Vælg dag(e)'
-              value={getDaySelectionInputText(selected?.length ?? 0)}
-              readOnly
-            />
-          }
-        >
-          <Calendar
-            locale={da}
-            mode='multiple'
-            weekStartsOn={1}
-            today={date}
-            showWeekNumber
-            selected={selected}
-            onSelect={setSelected}
-            className='rounded-lg border'
+        <div className='flex flex-col gap-2'>
+          <div>
+            <h3 className='text-base font-medium'>Hvad skal der spises?</h3>
+            <p className='text-sm text-muted-foreground'>
+              Vælg en eksisterende opskrift eller angiv et navn
+            </p>
+          </div>
+          <MealSelect
+            id='selectRecipe'
+            placeholder='Vælg eksisterende opskrift'
+            defaultValue={String(formData.recipeId ?? '')}
+            label='Opskrift'
+            recipies={recipies}
+            onValueChange={(id) => handleFormChange('recipeId', id)}
           />
-        </Popover>
-        <textarea
-          value={formData.note}
-          onChange={(e) => handleFormChange('note', e.target.value)}
-          placeholder='Noter'
-          className='w-full resize-none overflow-hidden bg-white border border-muted text-sm rounded-md focus:ring-brand focus:border-brand block p-3.5 shadow-sm'
-        />
+          <Input
+            name='name'
+            id='name'
+            label='Navn'
+            placeholder='Take away'
+            value={formData.name}
+            onChange={(e) => handleFormChange('name', e.target.value)}
+          />
+          <div>
+            <label className='text-left block text-sm' htmlFor='note'>
+              Noter
+            </label>
+            <textarea
+              name='note'
+              id='note'
+              value={formData.note}
+              onChange={(e) => handleFormChange('note', e.target.value)}
+              placeholder='Med bønner og ovnbagte grøntsager'
+              className='w-full resize-none overflow-hidden bg-white border border-muted text-sm rounded-md focus:ring-brand focus:border-brand block p-3.5 shadow-sm'
+            />
+          </div>
+          <Popover
+            align='left'
+            trigger={
+              <Input
+                label='Vælg dag(e)'
+                value={getDaySelectionInputText(selected?.length ?? 0)}
+                readOnly
+              />
+            }
+          >
+            <Calendar
+              required
+              disabled={isEditingMeal}
+              locale={da}
+              mode='multiple'
+              weekStartsOn={1}
+              today={date}
+              selected={selected}
+              onSelect={setSelected}
+            />
+          </Popover>
+        </div>
       </form>
       <DrawerFooter className='flex items-center my-4'>
-        <DrawerClose asChild>
-          <Button variant='outline'>Luk</Button>
-        </DrawerClose>
-        <Button form='meal-plan-form'>Gem</Button>
+        {isEditingMeal && (
+          <Button
+            variant='destructive'
+            onClick={handleDeleteMealPlan}            
+          >
+            Nulstil
+          </Button>
+        )}
+        <Button disabled={isSubmitDisabled} form='meal-plan-form'>
+          Gem
+        </Button>
       </DrawerFooter>
     </>
   );
