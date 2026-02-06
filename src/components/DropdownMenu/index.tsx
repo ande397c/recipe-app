@@ -35,7 +35,7 @@ export const DropdownMenu = ({ menuItems, children }: DropdownMenuProps) => {
         {children}
       </div>
       {isOpen && (
-        <div className='absolute right-0 w-56 bg-white border border-gray-300 rounded shadow-lg z-10'>
+        <div className='absolute right-0 w-56 bg-white border border-gray-300 text-sm rounded-lg shadow-lg z-10'>
           <ul>
             {menuItems.map((item, index) => (
               <li

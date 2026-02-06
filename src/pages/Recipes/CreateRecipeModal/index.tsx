@@ -19,7 +19,7 @@ interface CreateRecipeModalProps {
 
 export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalProps) => {
   const navigate = useNavigate();
-  const [img, setImg] = useState<File | null>(null);
+  // const [img, setImg] = useState<File | null>(null);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     link: '',
@@ -76,13 +76,13 @@ export const CreateRecipeModal = ({ displayModal, onClose }: CreateRecipeModalPr
           value={formData.link}
           onChange={handleFormChange}
         />
-        <Input
+        {/* <Input
           id='img'
           name='img'
           label='Billede'
           type='file'
           onChange={(e) => setImg(e.target.files?.[0] || null)}
-        />
+        /> */}
         <div className='flex items-center'>
           <input
             className='m-2 w-4 h-4 text-white accent-orange-600 rounded-xs'

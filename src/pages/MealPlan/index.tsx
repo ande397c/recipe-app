@@ -7,7 +7,7 @@ import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { uppercaseFirstLetter } from '@/utils/uppercaseFirstLetter';
 import { DayCard } from './DayCard';
 import { isSameCalendarDay } from './utils/isSameDate';
-import { useFetchMealPlans } from '@/services/MealPlans/useFetchMealPlans';
+import { useFetchMealPlans } from '@/services/mealPlans/useFetchMealPlans';
 import { CARD_HEADING_FORMAT_OPTIONS, WEEKDAYS_FORMAT_OPTIONS } from './lib/dateFormats';
 
 interface ButtonNavigationProps {

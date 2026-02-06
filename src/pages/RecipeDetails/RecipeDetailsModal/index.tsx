@@ -2,24 +2,35 @@ import { FC } from 'react';
 import { EditRecipeModal } from './EditRecipeModal';
 import { DeleteRecipeModal } from './DeleteRecipeModal';
 import { CopyIngrediensModal } from './CopyIngrediensModal';
+import { EditRecipeStepModal } from './EditRecipeStepModal';
 
+type Id = number | undefined;
 
 type RenameRecipeModal = {
-  recipeId: number | undefined;
+  recipeId: Id;
   type: 'edit';
 };
 
 type CopyIngredientsModal = {
-  recipeId: number | undefined;
+  recipeId: Id;
   type: 'copyIngredients';
 };
 
 type DeleteRecipeModal = {
-  recipeId: number | undefined;
+  recipeId: Id;
   type: 'delete';
 };
 
-export type RecipeyDetailsModalsProps = RenameRecipeModal | CopyIngredientsModal | DeleteRecipeModal;
+type EditStepModal = {
+  stepId: Id;
+  type: 'editStep';
+};
+
+export type RecipeyDetailsModalsProps =
+  | RenameRecipeModal
+  | CopyIngredientsModal
+  | DeleteRecipeModal
+  | EditStepModal;
 
 export const RecipeyDetailsModals: FC<RecipeyDetailsModalsProps & { onClose: () => void }> = (
   props
@@ -29,6 +40,8 @@ export const RecipeyDetailsModals: FC<RecipeyDetailsModalsProps & { onClose: () 
       return <CopyIngrediensModal {...props} />;
     case 'edit':
       return <EditRecipeModal {...props} />;
+    case 'editStep':
+      return <EditRecipeStepModal {...props} />;
     case 'delete':
       return <DeleteRecipeModal {...props} />;
     default:

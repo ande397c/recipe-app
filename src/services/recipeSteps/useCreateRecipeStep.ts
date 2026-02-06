@@ -26,9 +26,9 @@ export const useCreateRecipeStep = () => {
 
   return useMutation({
     mutationFn: createIngredient,   
-    onSuccess: (_data, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['recipe', variables.recipeId]
+        queryKey: ['recipe']
       });
     }
   });

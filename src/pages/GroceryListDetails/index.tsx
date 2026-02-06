@@ -15,6 +15,7 @@ import { IconButton } from '@/components/IconButton';
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import { Input } from '@/components/Input';
 import { sortItemsUncheckedFirst } from '@/utils/sortItems';
+import { useDeleteGroceryItem } from '@/services/groceryItems/useDeleteGroceryItem';
 
 
 export const GroceryListDetails = () => {
@@ -24,6 +25,7 @@ export const GroceryListDetails = () => {
   );
   const { mutate: createGroceryItem } = useCreateGroceryItem();
   const { mutate: updateGroceryItem } = useUpdateGroceryItem();
+  const { mutate: deleteGroceryItem } = useDeleteGroceryItem();
   const [newItem, setNewItem] = useState('');
   const [groceryDetailsModal, setGroceryDetailsModal] = useState<GroceryDetailsModalsProps | null>(
     null
@@ -32,6 +34,11 @@ export const GroceryListDetails = () => {
   const handleCloseModal = () => {
     setGroceryDetailsModal(null);
   };
+
+const handleDeleteItem = (id: number) => {
+    deleteGroceryItem({ id, listId: Number(id) }, {      
+    });
+  }
 
   const handleUpdateItem = (id: number, checked: boolean) => {
     updateGroceryItem({
@@ -110,6 +117,7 @@ export const GroceryListDetails = () => {
           name={item.grocery_item}
           isChecked={item.is_checked}
           onChange={handleUpdateItem}
+          onDelete={handleDeleteItem}
         />
       ))}
     </MainLayout>

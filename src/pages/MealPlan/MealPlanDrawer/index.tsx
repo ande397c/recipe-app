@@ -17,19 +17,19 @@ import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/shadcn/i
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUpRightFromSquare, faCalendarXmark } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import { useFetchSingleMealPlan } from '@/services/MealPlans/useFetchSingleMealPlan';
+import { useFetchSingleMealPlan } from '@/services/mealPlans/useFetchSingleMealPlan';
 import { Skeleton } from '@/components/Skeleton';
 import { MealPlanDay } from '@/interfaces/mealPlanDay';
 import { useFetchRecipies } from '@/services/recipies/useFetchRecipies';
-import { UpdateMealPlanInput, useUpdateMealPlan } from '@/services/MealPlans/useUpdateMealPlan';
+import { UpdateMealPlanInput, useUpdateMealPlan } from '@/services/mealPlans/useUpdateMealPlan';
 import { MEAL_DRAWER_HEADING } from '../lib/dateFormats';
 import { uppercaseFirstLetter } from '@/utils/uppercaseFirstLetter';
 import {
   CreateBulkMealPlansInput,
   useCreateBulkMealPlans
-} from '@/services/MealPlans/useCreateBulkMealPlans';
+} from '@/services/mealPlans/useCreateBulkMealPlans';
 import { Empty } from '@/components/Empty';
-import { useDeleteMealPlan } from '@/services/MealPlans/useDeleteMealPlan';
+import { useDeleteMealPlan } from '@/services/mealPlans/useDeleteMealPlan';
 
 type MealDrawerView = 'preview' | 'edit';
 
@@ -74,7 +74,7 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
 
   return (
     <Drawer open={isOpen} onClose={onClose}>
-      <DrawerContent className='px-3'>        
+      <DrawerContent className='px-3'>
         <div className='w-full'>
           <DrawerHeader>
             <DrawerTitle>
@@ -98,8 +98,10 @@ export const MealPlanDrawer: FC<MealPlanDrawerProps> = ({ id, date, isOpen, onCl
 };
 
 // Componnet
-const MealPreview: FC<{ meal: MealPlanDay | undefined, isLoading: boolean }> = ({ meal, isLoading }) => {
-  
+const MealPreview: FC<{ meal: MealPlanDay | undefined; isLoading: boolean }> = ({
+  meal,
+  isLoading
+}) => {
   if (isLoading) {
     return <Skeleton shape='rect' height='2rem' />;
   }
@@ -177,7 +179,7 @@ const EditMealForm: FC<{
         }
       }
     );
-  }
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -193,9 +195,9 @@ const EditMealForm: FC<{
       id: isEditingMeal ? id : 0,
       name: formData.name,
       note: formData.note,
-      recipeId: formData.recipeId ? Number(formData.recipeId) : null,
-      planDate: date
+      recipeId: formData.recipeId ? Number(formData.recipeId) : null
     };
+    console.log(payLoad);
     updateMealPlan(payLoad, {
       onSuccess: () => {
         onClose();
@@ -283,10 +285,7 @@ const EditMealForm: FC<{
       </form>
       <DrawerFooter className='flex items-center my-4'>
         {isEditingMeal && (
-          <Button
-            variant='destructive'
-            onClick={handleDeleteMealPlan}            
-          >
+          <Button variant='destructive' onClick={handleDeleteMealPlan}>
             Nulstil
           </Button>
         )}

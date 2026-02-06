@@ -139,7 +139,11 @@ export const RecipeDetail: FC = () => {
       </div>
       <ChangeRecipeDetailsView isStepView={isStepView} onChangeView={handleViewChange} />
       {isStepView ? (
-        <RecipeDetailsSteps steps={recipe?.recipe_steps ?? []} recipeId={Number(id)} />
+        <RecipeDetailsSteps
+          steps={recipe?.recipe_steps ?? []}
+          recipeId={Number(id)}
+          onEditStep={(id) => setRecipeDetailsModal({ type: 'editStep', stepId: id })}
+        />
       ) : (
         <RecipeDetailsIngredients ingredients={recipe?.ingredients ?? []} recipeId={Number(id)} />
       )}

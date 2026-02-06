@@ -8,6 +8,7 @@ import {
 import { useUpdateIngredient } from '@/services/ingredients/useUpdateIngredient';
 import { Input } from '@/components/Input';
 import { sortItemsUncheckedFirst } from '@/utils/sortItems';
+import { useDeleteRecipeIngredient } from '@/services/ingredients/useDeleteRecipeIngredient';
 
 interface RecipeDetailsIngredientsProps {
   recipeId: number;
@@ -20,6 +21,7 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
 }) => {
   const { mutate: createIngredient } = useCreateIngredient();
   const { mutate: updateIngredient } = useUpdateIngredient();
+  const { mutate: deleteIngredient } = useDeleteRecipeIngredient();
   const [newItem, setNewItem] = useState('');
 
   const handleCreateItem = (e: FormEvent) => {
@@ -40,6 +42,10 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
         console.error('Error creating grocery item:', error);
       }
     });
+  };
+
+  const handleDeleteItem = (id: number) => {
+    deleteIngredient({ id });
   };
 
   const handleUpdateItem = (id: number, checked: boolean) => {
@@ -70,6 +76,7 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
           name={ingredient.ingredient_name}
           isChecked={ingredient.is_checked}
           onChange={handleUpdateItem}
+          onDelete={handleDeleteItem}
         />
       ))}
     </>
