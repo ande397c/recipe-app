@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/services/supabaseClient';
-import { CreateMealPlanInput } from './useCreateMealPlan';
+import { CreateMealPlanInput } from '../mealPlans/useCreateMealPlan'; 
 
 export type CreateBulkMealPlansInput = Omit<CreateMealPlanInput, 'planDate'> & {
   planDates: Date[];
