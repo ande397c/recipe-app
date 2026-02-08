@@ -40,7 +40,7 @@ export const ActionSwipe: FC<ActionSwipeProps> = ({
 
   return (
     <div className='relative overflow-hidden rounded-md'>
-      <div className='absolute inset-y-0 right-[3px] flex'>
+      <div className='absolute inset-y-0 right-[3px] p-0.5 flex'>
         {actions({ close: () => setOpen(false) })}
       </div>
 

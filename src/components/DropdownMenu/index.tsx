@@ -31,7 +31,7 @@ export const DropdownMenu = ({ menuItems, children }: DropdownMenuProps) => {
 
   return (
     <div ref={dropDownMenuRef} className='relative'>
-      <div className='p-2' onClick={toggleMenuOpen}>
+      <div onClick={toggleMenuOpen}>
         {children}
       </div>
       {isOpen && (
