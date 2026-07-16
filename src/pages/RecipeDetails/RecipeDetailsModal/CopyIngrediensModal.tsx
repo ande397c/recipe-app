@@ -26,7 +26,7 @@ export const CopyIngrediensModal: FC<CopyIngrediensModalProps> = ({ recipeId, on
     () => ({
       height: String((groceryLists?.length ?? 0) * 3) + 'rem',
       minHeight: '5rem',
-      maxHeight: '15rem'
+      maxHeight: '20rem'
     }),
     [groceryLists]
   );

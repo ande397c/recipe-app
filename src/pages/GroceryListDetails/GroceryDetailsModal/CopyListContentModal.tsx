@@ -36,7 +36,7 @@ export const CopyListContentModal: FC<CopyListContentModalProps> = ({ listId, on
     () => ({
       height: String((availableLists?.length ?? 0) * 3) + 'rem',
       minHeight: '5rem',
-      maxHeight: '15rem'
+      maxHeight: '20rem'
     }),
     [availableLists]
   );

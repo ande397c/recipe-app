@@ -9,7 +9,6 @@ import {
   faArrowUpRightFromSquare,
   faEdit,
   faEllipsis,
-  faListCheck,
   faSquareMinus,
   faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
@@ -21,12 +20,12 @@ import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/shadcn/i
 import { RecipeDetailsSteps } from '@/pages/RecipeDetails/RecipeDetailsSteps';
 import { RecipeDetailsIngredients } from './RecipeDetailsIngredients';
 import { ChangeRecipeDetailsView } from './ChangeRecipeDetailsView';
-import { RecipeDetailsView } from '@/constants';
 import { RecipeDetailsLayout } from '@/components/RecipeDetailsLayout';
 import { IconButton } from '@/components/IconButton';
 import { Pill } from '@/components/Pill';
 import { useUncheckRecipeSteps } from '@/services/recipeSteps/useUncheckRecipeSteps';
-import { useUncheckRecipeIngredients } from '@/services/ingredients/useUncheckRecipeIngredients';
+
+type RecipeDetailsView = 'steps' | 'ingredients';
 
 interface RecipeTopUiProps {
   menuItems: MenuItem[];
@@ -35,13 +34,12 @@ export const RecipeDetail: FC = () => {
   const { id } = useParams();
   const { data: recipe, isLoading } = useFetchSingleRecipe(Number(id));
   const { mutate: unCheckSteps } = useUncheckRecipeSteps();
-  const { mutate: unCheckIngredients } = useUncheckRecipeIngredients();
   const [recipeDetailsView, setRecipeDetailsView] = useState<RecipeDetailsView>('steps');
   const [recipeDetailsModal, setRecipeDetailsModal] = useState<RecipeyDetailsModalsProps | null>(
     null
   );
   const isStepView = recipeDetailsView === 'steps';
-
+    
   const handleUncheckSteps = () => {
     if (!recipe) return;
     const updatedSteps = recipe.recipe_steps.map((step) => ({
@@ -50,16 +48,6 @@ export const RecipeDetail: FC = () => {
       is_completed: false
     }));
     unCheckSteps({ bulkInput: updatedSteps });
-  };
-
-  const handleUncheckIngredients = () => {
-    if (!recipe) return;
-    const updatedIngredients = recipe.ingredients.map((ingredient) => ({
-      ...ingredient,
-      id: ingredient.id,
-      is_checked: false
-    }));
-    unCheckIngredients({ bulkInput: updatedIngredients });
   };
 
   const handleViewChange = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,12 +67,6 @@ export const RecipeDetail: FC = () => {
       isDisabled: recipe?.recipe_steps.length === 0,
       onClick: handleUncheckSteps,
       icon: faSquareMinus
-    },
-    {
-      label: 'Uncheck ingredienser',
-      isDisabled: recipe?.ingredients.length === 0,
-      onClick: handleUncheckIngredients,
-      icon: faListCheck
     },
     {
       label: 'Rediger opskrift',

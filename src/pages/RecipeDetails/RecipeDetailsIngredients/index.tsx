@@ -69,16 +69,19 @@ export const RecipeDetailsIngredients: FC<RecipeDetailsIngredientsProps> = ({
         />
         <button className='hidden'>Tilføj</button>
       </form>
-      {sortItemsUncheckedFirst(ingredients)?.map((ingredient) => (
-        <GroceryItem
-          key={ingredient.id}
-          id={ingredient.id}
-          name={ingredient.ingredient_name}
-          isChecked={ingredient.is_checked}
-          onChange={handleUpdateItem}
-          onDelete={handleDeleteItem}
-        />
-      ))}
+      <ul className='list-inside list-disc marker:text-amber-600'>
+        {sortItemsUncheckedFirst(ingredients)?.map((ingredient) => (
+          <GroceryItem
+            key={ingredient.id}
+            isChecked={ingredient.is_checked}
+            isReadOnly
+            id={ingredient.id}
+            name={ingredient.ingredient_name}
+            onChange={handleUpdateItem}
+            onDelete={handleDeleteItem}
+          />
+        ))}
+      </ul>
     </>
   );
 };

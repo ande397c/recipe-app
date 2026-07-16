@@ -44,7 +44,7 @@ export const MealPlan: FC = () => {
   };
 
   return (
-    <MainLayout title='Madplaner' spacing={4}>
+    <MainLayout title='Madplan' spacing={4}>
       <ButtonNavigation currentDay={day} onGoBack={goBack} onGoForward={goForward} />
       <ul className='grid grid-cols-1 gap-4'>
         {weekDays.map((day) => {
