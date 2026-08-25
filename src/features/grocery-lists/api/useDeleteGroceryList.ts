@@ -1,0 +1,27 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+
+interface deleteGroceryListProps {
+  id: number;
+}
+
+const deleteGroceryList = async ({ id }: deleteGroceryListProps) => {
+  const { data, error } = await supabase.from('grocery_lists').delete().eq('id', id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+export const useDeleteGroceryList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteGroceryList,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['grocery-lists'] });
+    }
+  });
+};

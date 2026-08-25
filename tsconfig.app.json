@@ -24,13 +24,7 @@
 
     /* Path Aliases */
     "paths": {
-      "@/*": ["./src/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
-      "@interfaces/*": ["./src/interfaces/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"]

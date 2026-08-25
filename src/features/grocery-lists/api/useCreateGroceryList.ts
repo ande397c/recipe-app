@@ -1,0 +1,35 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import { GroceryList } from '@/types/groceryList';
+
+export interface CreateGroceryItemInput {
+  name: string;
+}
+
+const createGroceryList = async ({ name }: CreateGroceryItemInput): Promise<GroceryList> => {
+  if (!name) throw new Error('listId is required');
+
+  const { data, error } = await supabase
+    .from('grocery_lists')
+    .insert([{ list_name: name }])
+    .select()
+    .single();
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+export const useCreateGroceryList = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createGroceryList,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['grocery-lists']
+      });
+    }
+  });
+};

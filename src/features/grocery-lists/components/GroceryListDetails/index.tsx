@@ -1,0 +1,125 @@
+import { FormEvent, useState } from 'react';
+import { MainLayout } from '@/components/layouts/MainLayout';
+import {
+  CreateGroceryItemInput,
+  useCreateGroceryItem
+} from '@/features/grocery-lists/api/useCreateGroceryItem';
+import { useUpdateGroceryItem } from '@/features/grocery-lists/api/useUpdateGroceryItem';
+import { useFetchSingleGroceryList } from '@/features/grocery-lists/api/useFetchSingleGroceryList';
+import { useParams } from 'react-router-dom';
+import { GroceryItem } from '@/features/grocery-lists/components/GroceryItem';
+import { GroceryListOperations } from './GroceryListOperations';
+import { GroceryDetailsModals, GroceryDetailsModalsProps } from './GroceryDetailsModal';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { IconButton } from '@/components/ui/IconButton';
+import { faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { Input } from '@/components/ui/Input';
+import { sortItemsUncheckedFirst } from '@/utils/sortItems';
+import { useDeleteGroceryItem } from '@/features/grocery-lists/api/useDeleteGroceryItem';
+
+
+export const GroceryListDetails = () => {
+  const { id } = useParams();
+  const { data: singleGroceryList, isLoading: isLoadingListDeatils } = useFetchSingleGroceryList(
+    Number(id)
+  );
+  const { mutate: createGroceryItem } = useCreateGroceryItem();
+  const { mutate: updateGroceryItem } = useUpdateGroceryItem();
+  const { mutate: deleteGroceryItem } = useDeleteGroceryItem();
+  const [newItem, setNewItem] = useState('');
+  const [groceryDetailsModal, setGroceryDetailsModal] = useState<GroceryDetailsModalsProps | null>(
+    null
+  );
+
+  const handleCloseModal = () => {
+    setGroceryDetailsModal(null);
+  };
+
+const handleDeleteItem = (id: number) => {
+    deleteGroceryItem({ id, listId: Number(id) }, {      
+    });
+  }
+
+  const handleUpdateItem = (id: number, checked: boolean) => {
+    updateGroceryItem({
+      checked,
+      id
+    });
+  };
+
+  const handleCreateItem = (e: FormEvent) => {
+    e.preventDefault();
+    const name = newItem.trim();
+    if (!name) return;
+
+    const payload: CreateGroceryItemInput = {
+      name,
+      listId: Number(id)
+    };
+
+    createGroceryItem(payload, {
+      onSuccess: () => {
+        setNewItem('');
+      },
+      onError: (error) => {
+        console.error('Error creating grocery item:', error);
+      }
+    });
+  };
+
+  if (isLoadingListDeatils) {
+    return (
+      <MainLayout spacing={4}>
+        <Skeleton shape='rect' height='1.5rem' width='50%' />
+        <Skeleton shape='rect' height='1.5rem' width='15%' />
+        {Array.from({ length: 4 }).map((_, index) => (
+          <Skeleton key={index} shape='rect' width='100%' />
+        ))}
+      </MainLayout>
+    );
+  }
+
+  return (
+    <MainLayout
+      title={singleGroceryList?.list_name}
+      action={<IconButton icon={faAngleLeft} onClick={() => window.history.back()} />}
+    >
+      {groceryDetailsModal && (
+        <GroceryDetailsModals onClose={handleCloseModal} {...groceryDetailsModal} />
+      )}
+
+      <GroceryListOperations
+        listItems={singleGroceryList?.grocery_items ?? []}
+        onDisplayRenameModal={() => setGroceryDetailsModal({ type: 'rename', listId: Number(id) })}
+        onDisplayMoveContentModal={() =>
+          setGroceryDetailsModal({ type: 'copyContent', listId: Number(id) })
+        }
+        onDisplayDeleteListModal={() =>
+          setGroceryDetailsModal({ type: 'delete', listId: Number(id) })
+        }
+      />
+      <form onSubmit={handleCreateItem}>
+        <Input
+          name='createGroceryItem'
+          value={newItem}
+          type='text'
+          placeholder='Bananer'
+          label='Tilføj indkøb'
+          onChange={(e) => setNewItem(e.target.value)}
+          onBlur={handleCreateItem}
+        />
+        <button className='hidden'>Tilføj</button>
+      </form>
+      {sortItemsUncheckedFirst(singleGroceryList?.grocery_items).map((item) => (
+        <GroceryItem
+          key={item.id}
+          id={item.id}
+          name={item.grocery_item}
+          isChecked={item.is_checked}
+          onChange={handleUpdateItem}
+          onDelete={handleDeleteItem}
+        />
+      ))}
+    </MainLayout>
+  );
+};
